@@ -13,21 +13,21 @@ export default function HeroSection() {
   const [showSubtitle, setShowSubtitle] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
 
-  // Calculate timing based on text length and typing speed
+  
   useEffect(() => {
     const titleText = "Welcome to Spectra 2025...";
     const typingSpeed = 75;
     const titleDuration = titleText.length * typingSpeed;
 
-    // Show subtitle after title completes
+    
     const subtitleTimer = setTimeout(() => {
       setShowSubtitle(true);
-    }, titleDuration + 300); // Small delay after title
+    }, titleDuration + 300); 
 
-    // Show buttons after subtitle appears
+    
     const buttonsTimer = setTimeout(() => {
       setShowButtons(true);
-    }, titleDuration + 1000); // Longer delay for buttons
+    }, titleDuration + 1000); 
 
     return () => {
       clearTimeout(subtitleTimer);
