@@ -8,7 +8,7 @@ import {
 import { events } from "@/lib/constants";
 import Link from "next/link";
 import React from "react";
-import { cn } from "@/lib/utils";
+
 
 export default function EventsSection() {
   return (
@@ -19,14 +19,13 @@ export default function EventsSection() {
       />
       <Terminal className="min-h-fit w-[90%] md:w-[80%] ">
         <TypingAnimation duration={20} className="text-muted-foreground">
-          $ SELECT * FROM spectra_events
+          {"> Loading all events..."}
         </TypingAnimation>
         <TypingAnimation duration={20} className="text-destructive">
-          x Database Error: Too many fun events found.
-          query.
+          x Error: Too many awesome events found!
         </TypingAnimation>
         <TypingAnimation duration={20} className="text-muted-foreground">
-          $ SELECT * FROM spectra_events LIMIT 4
+          {"> Showing top 4 events"}
         </TypingAnimation>
         <TypingAnimation
           duration={20}
@@ -39,12 +38,12 @@ export default function EventsSection() {
         </AnimatedSpan>
         <AnimatedSpan>
           <span className="text-muted-foreground">
-            To see all events, run:{" "}
+            Want to see more?{" "}
             <Link
               href="/events"
               className="text-primary underline underline-offset-4"
             >
-              sudo ./all_spectra_events.sh
+              View All Events
             </Link>
           </span>
         </AnimatedSpan>

@@ -1,41 +1,80 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import TerminalBg from "@/modules/home/ui/components/terminal-bg";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { codeFont } from "@/components/fonts";
 import TextType from "@/modules/home/ui/components/typewriter";
 import Link from "next/link";
+import { motion } from "motion/react";
 
 export default function HeroSection() {
+  const [showSubtitle, setShowSubtitle] = useState(false);
+  const [showButtons, setShowButtons] = useState(false);
+
+  // Calculate timing based on text length and typing speed
+  useEffect(() => {
+    const titleText = "Welcome to Spectra 2025...";
+    const typingSpeed = 75;
+    const titleDuration = titleText.length * typingSpeed;
+
+    // Show subtitle after title completes
+    const subtitleTimer = setTimeout(() => {
+      setShowSubtitle(true);
+    }, titleDuration + 300); // Small delay after title
+
+    // Show buttons after subtitle appears
+    const buttonsTimer = setTimeout(() => {
+      setShowButtons(true);
+    }, titleDuration + 1000); // Longer delay for buttons
+
+    return () => {
+      clearTimeout(subtitleTimer);
+      clearTimeout(buttonsTimer);
+    };
+  }, []);
+
   return (
     <section className="flex h-screen flex-col items-center">
       <div className="z-10 flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
         <TextType
-          text={["Initializing Spectra_2025.exe ..."]}
+          text={["Welcome to Spectra 2025..."]}
           typingSpeed={75}
           pauseDuration={1500}
           showCursor={true}
           cursorCharacter="_"
           className={cn(
             codeFont.className,
-            "text-[30px] tracking-tight md:text-[50px]",
+            "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]",
           )}
         />
-        {/* <h1>Spectra</h1> */}
-        <p className="text-muted-foreground max-w-2xl text-sm md:text-xl">
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={showSubtitle ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="text-muted-foreground max-w-3xl text-base sm:text-lg md:text-xl lg:text-2xl"
+        >
           One campus, Infinite vibes — where friendships spark, dreams dance,
           and memories never fade.
-        </p>
-        <div className="flex gap-4">
-          <Button size="lg" className="rounded-full">
-            fetch --tickets
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={showButtons ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row gap-4"
+        >
+          <Button size="lg" className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold">
+            Get Tickets
           </Button>
           <Link href="#events" className="rounded-full">
-            <Button size="lg" variant="outline">
-              cd ./eventhub
+            <Button size="lg" variant="outline" className="px-8 py-6 text-base sm:text-lg font-semibold">
+              View Events
             </Button>
           </Link>
-        </div>
+        </motion.div>
       </div>
       <div className="absolute h-screen w-full opacity-30">
         <TerminalBg
@@ -50,7 +89,7 @@ export default function HeroSection() {
           noiseAmp={1}
           chromaticAberration={0}
           dither={0}
-          curvature={0.3}
+          curvature={0.05}
           tint="#9CFF00"
           mouseReact={true}
           mouseStrength={0.5}
