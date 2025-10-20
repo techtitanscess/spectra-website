@@ -7,53 +7,54 @@ import { cn } from "@/lib/utils";
 import { codeFont } from "@/components/fonts";
 import TextType from "@/modules/home/ui/components/typewriter";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
+import Beams from "../components/hero-bg";
 
 export default function HeroSection() {
-  const [showSubtitle, setShowSubtitle] = useState(false);
-  const [showButtons, setShowButtons] = useState(false);
 
-  
-  useEffect(() => {
-    const titleText = "Welcome to Spectra 2025...";
-    const typingSpeed = 75;
-    const titleDuration = titleText.length * typingSpeed;
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 60,
+        damping: 12,
+      },
+    },
+  };
 
-    
-    const subtitleTimer = setTimeout(() => {
-      setShowSubtitle(true);
-    }, titleDuration + 300); 
-
-    
-    const buttonsTimer = setTimeout(() => {
-      setShowButtons(true);
-    }, titleDuration + 1000); 
-
-    return () => {
-      clearTimeout(subtitleTimer);
-      clearTimeout(buttonsTimer);
-    };
-  }, []);
-
+  const buttonGroupVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.4,
+      },
+    },
+  };
   return (
     <section className="flex h-screen flex-col items-center">
-      <div className="z-10 flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center">
+      <motion.div
+        variants={buttonGroupVariants}
+        className="z-10 flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center"
+      >
         <TextType
-          text={["Welcome to Spectra 2025..."]}
+          text={["Spectra 2025"]}
           typingSpeed={75}
           pauseDuration={1500}
-          showCursor={true}
-          cursorCharacter="_"
+          showCursor={false}
           className={cn(
             codeFont.className,
-            "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]",
+            "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
           )}
         />
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={showSubtitle ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          variants={itemVariants}
           className="text-muted-foreground max-w-3xl text-base sm:text-lg md:text-xl lg:text-2xl"
         >
           One campus, Infinite vibes — where friendships spark, dreams dance,
@@ -61,23 +62,38 @@ export default function HeroSection() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={showButtons ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          variants={itemVariants}
           className="flex flex-col sm:flex-row gap-4"
         >
-          <Button size="lg" className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold">
+          <Button
+            size="lg"
+            className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold"
+          >
             Get Tickets
           </Button>
           <Link href="#events" className="rounded-full">
-            <Button size="lg" variant="outline" className="px-8 py-6 text-base sm:text-lg font-semibold">
+            <Button
+              size="lg"
+              variant="outline"
+              className="px-8 py-6 text-base sm:text-lg font-semibold"
+            >
               View Events
             </Button>
-          </Link>
+          </Link> 
         </motion.div>
-      </div>
-      <div className="absolute h-screen w-full opacity-30">
-        <TerminalBg
+      </motion.div>
+      <div className="absolute h-screen w-full opacity-80">
+        <Beams
+          beamWidth={2}
+          beamHeight={15}
+          beamNumber={12}
+          lightColor="#9CFF00"
+          speed={2}
+          noiseIntensity={1.75}
+          scale={0.2}
+          rotation={152}
+        />
+        {/* <TerminalBg
           scale={1.5}
           gridMul={[2, 1]}
           digitSize={1.2}
@@ -95,7 +111,7 @@ export default function HeroSection() {
           mouseStrength={0.5}
           pageLoadAnimation={true}
           brightness={0.4}
-        />
+        /> */}
       </div>
     </section>
   );

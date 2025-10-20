@@ -1,7 +1,7 @@
 import Image from "next/image";
-import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import UserButton from "@/modules/auth/ui/components/user-button";
 
 export default function Navbar() {
   return (
@@ -17,11 +17,7 @@ export default function Navbar() {
           />
           <span className="text-3xl tracking-tight">Spectra</span>
         </div>
-        <Link href="/sign-up">
-          <Button variant="link" effect="underline">
-            Sign Up
-          </Button>
-        </Link>
+        <UserButton />
       </div>
     </nav>
   );

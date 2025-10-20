@@ -1,65 +1,103 @@
-import { Input } from "@/components/ui/input";
-import { FaTerminal } from "react-icons/fa6";
-import {
-  AnimatedSpan,
-  Terminal,
-  TypingAnimation,
-} from "@/components/ui/terminal";
-import Link from "next/link";
+"use client";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { authClient } from "@/lib/auth-client";
+import { LoadingSwap } from "@/components/ui/loading-swap";
+import { useRouter } from "next/navigation";
 
-export function SignInForm() {
+const formSchema = z.object({
+  email: z.email().min(1, "Email is required"),
+  password: z.string().min(6, "Password must be at least 8` characters"),
+});
+
+export default function SignInForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const { isSubmitting } = form.formState;
+  const router = useRouter();
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onError: (error) => {
+          toast.error(
+            error.error.message || "Failed to sign in. Please try again."
+          );
+        },
+        onSuccess: () => {
+          toast.success("Signed in successfully!");
+          router.push("/");
+        },
+      }
+    );
+  }
+
   return (
-    <Terminal className="h-fit w-[95%] sm:w-[85%] md:w-[60%] lg:w-[45%] xl:w-[40%]">
-      <TypingAnimation duration={30}>Welcome back! Please sign in</TypingAnimation>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 mx-auto py-4"
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="" type="email" {...field} />
+              </FormControl>
 
-      <AnimatedSpan className="text-destructive">
-        ✖ Required: email_address & password.
-      </AnimatedSpan>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="my-3 sm:my-4 flex flex-col gap-2 sm:gap-3">
-        <div>
-          <AnimatedSpan className="text-primary text-sm sm:text-base">
-            ? Enter email_address:
-          </AnimatedSpan>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <PasswordInput placeholder="" {...field} />
+              </FormControl>
 
-          <AnimatedSpan className="flex items-center gap-2 sm:gap-3">
-            <FaTerminal className="text-sm sm:text-base flex-shrink-0" />
-            <Input type="email" className="text-sm sm:text-base" />
-          </AnimatedSpan>
-        </div>
-        <div>
-          <AnimatedSpan className="text-primary text-sm sm:text-base">
-            ? Enter password:
-          </AnimatedSpan>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <AnimatedSpan className="flex items-center gap-2 sm:gap-3">
-            <FaTerminal className="text-sm sm:text-base flex-shrink-0" />
-            <Input type="password" className="text-sm sm:text-base" />
-          </AnimatedSpan>
-        </div>
-      </div>
-
-      <AnimatedSpan>
-        <Button variant="outline" className="my-2 w-full">
-          Sign In
+        <Button type="submit" className="w-full font-semibold tracking-tight">
+          <LoadingSwap isLoading={isSubmitting}>
+            <span>Sign In</span>
+          </LoadingSwap>
         </Button>
-      </AnimatedSpan>
-
-      <TypingAnimation duration={30} className="text-muted-foreground">
-        Other useful commands:
-      </TypingAnimation>
-
-      <AnimatedSpan className="text-primary my-1">
-        <Link href="/sign-up" className="underline underline-offset-4">
-          Create Account
-        </Link>
-      </AnimatedSpan>
-      <AnimatedSpan className="text-primary">
-        <Link href="/" className="underline underline-offset-4">
-          Back to Home
-        </Link>
-      </AnimatedSpan>
-    </Terminal>
+      </form>
+    </Form>
   );
 }
