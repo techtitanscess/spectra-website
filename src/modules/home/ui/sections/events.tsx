@@ -1,4 +1,4 @@
-import EventsMenu from "@/components/shared/events-menu";
+import EventsMenu from "@/modules/events/ui/components/events-menu";
 import Header from "@/components/shared/header";
 import {
   AnimatedSpan,

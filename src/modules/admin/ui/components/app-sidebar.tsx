@@ -25,7 +25,7 @@ const items = [
   },
   {
     title: "Tickets",
-    url: "#",
+    url: "/admin/tickets",
     icon: Calendar,
   },
   {

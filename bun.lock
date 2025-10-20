@@ -42,6 +42,7 @@
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.3.1",
         "three": "^0.180.0",
+        "timescape": "^0.8.0",
         "zod": "^4.1.12",
       },
       "devDependencies": {
@@ -742,6 +743,8 @@
     "three-mesh-bvh": ["three-mesh-bvh@0.8.3", "", { "peerDependencies": { "three": ">= 0.159.0" } }, "sha512-4G5lBaF+g2auKX3P0yqx+MJC6oVt6sB5k+CchS6Ob0qvH0YIhuUk1eYr7ktsIpY+albCqE80/FVQGV190PmiAg=="],
 
     "three-stdlib": ["three-stdlib@2.36.0", "", { "dependencies": { "@types/draco3d": "^1.4.0", "@types/offscreencanvas": "^2019.6.4", "@types/webxr": "^0.5.2", "draco3d": "^1.4.1", "fflate": "^0.6.9", "potpack": "^1.0.1" }, "peerDependencies": { "three": ">=0.128.0" } }, "sha512-kv0Byb++AXztEGsULgMAs8U2jgUdz6HPpAB/wDJnLiLlaWQX2APHhiTJIN7rqW+Of0eRgcp7jn05U1BsCP3xBA=="],
+
+    "timescape": ["timescape@0.8.0", "", { "peerDependencies": { "@preact/signals": "1.x", "preact": "10.x", "react": ">=17", "react-dom": ">=17", "solid-js": ">=1", "svelte": "3.x", "vue": "3.x" }, "optionalPeers": ["@preact/signals", "preact", "react", "react-dom", "solid-js", "svelte", "vue"] }, "sha512-nNYAnZY1BPHSfnnpx3V9wWdxb9z4tB7zksRx0/mRFpZ8gK3fqEMZQ43hHqUDgJICVTb33hmfkeAYaKGkN7Q3Nw=="],
 
     "troika-three-text": ["troika-three-text@0.52.4", "", { "dependencies": { "bidi-js": "^1.0.2", "troika-three-utils": "^0.52.4", "troika-worker-utils": "^0.52.0", "webgl-sdf-generator": "1.1.1" }, "peerDependencies": { "three": ">=0.125.0" } }, "sha512-V50EwcYGruV5rUZ9F4aNsrytGdKcXKALjEtQXIOBfhVoZU9VAqZNIoGQ3TMiooVqFAbR1w15T+f+8gkzoFzawg=="],
 

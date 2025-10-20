@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { EnhancedDataTable } from "@/components/ui/enhanced-data-table";
 import { createEventColumns, Event } from "./event-columns";
-import { useEvents, useDeleteEvent } from "@/hooks/use-events";
-import EditEventDialog from "./edit-event-dialog";
+import { useEvents, useDeleteEvent } from "@/modules/admin/server/events/hooks";
 import { LoadingSwap } from "@/components/ui/loading-swap";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, AlertTriangle } from "lucide-react";
@@ -16,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import EventForm from "./event-form";
 
 interface EventsTableProps {
   onEditEvent?: (event: Event) => void;
@@ -82,8 +82,6 @@ export default function EventsTable({ onEditEvent }: EventsTableProps) {
 
   return (
     <div className="space-y-4">
-      
-
       <EnhancedDataTable
         columns={columns}
         data={events || []}
@@ -116,11 +114,19 @@ export default function EventsTable({ onEditEvent }: EventsTableProps) {
         </DialogContent>
       </Dialog>
 
-      <EditEventDialog
-        event={editEvent}
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-      />
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Event</DialogTitle>
+          </DialogHeader>
+          {editEvent && (
+            <EventForm
+              event={editEvent}
+              onSuccess={() => setIsEditDialogOpen(false)}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

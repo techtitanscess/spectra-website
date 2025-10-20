@@ -16,18 +16,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Calendar as CalendarIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { DatetimePicker } from "@/components/ui/datetime-picker";
 import { LoadingSwap } from "@/components/ui/loading-swap";
-import { useCreateEvent } from "@/hooks/use-events";
+import {
+  useCreateEvent,
+  useUpdateEvent,
+} from "@/modules/admin/server/events/hooks";
 import { authClient } from "@/lib/auth-client";
+import { Event } from "./event-columns";
+import { useEffect } from "react";
 
 const formSchema = z
   .object({
@@ -44,7 +42,12 @@ const formSchema = z
     path: ["endDate"],
   });
 
-export default function EventForm() {
+interface EventFormProps {
+  event?: Event | null;
+  onSuccess?: () => void;
+}
+
+export default function EventForm({ event, onSuccess }: EventFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -61,24 +64,71 @@ export default function EventForm() {
   const { data } = authClient.useSession();
   const { isSubmitting } = form.formState;
   const createEventMutation = useCreateEvent();
+  const updateEventMutation = useUpdateEvent();
+
+  const isEditing = !!event;
+
+  // Populate form with event data when editing
+  useEffect(() => {
+    if (event) {
+      form.reset({
+        name: event.name,
+        startDate: new Date(event.startDate),
+        endDate: new Date(event.endDate),
+        description: event.description,
+        imageUrl: event.imageUrl || "",
+        totalHours: event.totalHours,
+        ticketCost: event.ticketCost,
+      });
+    }
+  }, [event, form]);
+
+  // Calculate total hours when start or end date changes
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      if (name === "startDate" || name === "endDate") {
+        const startDate = value.startDate;
+        const endDate = value.endDate;
+
+        if (startDate && endDate && endDate >= startDate) {
+          const diffInMs = endDate.getTime() - startDate.getTime();
+          const diffInHours = Math.ceil(diffInMs / (1000 * 60 * 60));
+          form.setValue("totalHours", diffInHours);
+        }
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!data) {
+    if (!data && !isEditing) {
       toast.error("You must be logged in to create an event");
       return;
     }
 
     try {
-      const eventData = {
-        ...values,
-        imageUrl: values.imageUrl || undefined,
-        createdBy: data?.user?.id,
-      };
-
-      await createEventMutation.mutateAsync(eventData);
-      form.reset();
+      if (isEditing && event) {
+        // Update existing event
+        const eventData = {
+          id: event.id,
+          ...values,
+          imageUrl: values.imageUrl || undefined,
+        };
+        await updateEventMutation.mutateAsync(eventData);
+        onSuccess?.();
+      } else {
+        // Create new event
+        const eventData = {
+          ...values,
+          imageUrl: values.imageUrl || undefined,
+          createdBy: data?.user?.id || "",
+        };
+        await createEventMutation.mutateAsync(eventData);
+        form.reset();
+        onSuccess?.();
+      }
     } catch (error) {
-      // Error is handled in the mutation hook
+      // Error is handled in the mutation hooks
       console.error("Form submission error", error);
     }
   }
@@ -104,91 +154,48 @@ export default function EventForm() {
           )}
         />
 
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6">
-            <FormField
-              control={form.control}
-              name="startDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Start Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="col-span-6">
-            <FormField
-              control={form.control}
-              name="endDate"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>End Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
+        <FormField
+          control={form.control}
+          name="startDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Start Date & Time</FormLabel>
+              <FormControl>
+                <DatetimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  format={[
+                    ["months", "days", "years"],
+                    ["hours", "minutes", "am/pm"],
+                  ]}
+                  className="w-full"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="endDate"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>End Date & Time</FormLabel>
+              <FormControl>
+                <DatetimePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  format={[
+                    ["months", "days", "years"],
+                    ["hours", "minutes", "am/pm"],
+                  ]}
+                  className="w-full"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -225,11 +232,13 @@ export default function EventForm() {
                       type="number"
                       min="1"
                       {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      value={field.value}
+                      readOnly
+                      className="bg-muted"
                     />
                   </FormControl>
                   <FormDescription>
-                    Duration of the event in hours
+                    Automatically calculated from start and end date/time
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -279,17 +288,41 @@ export default function EventForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full font-semibold tracking-tight"
-          disabled={isSubmitting || createEventMutation.isPending}
-        >
-          <LoadingSwap
-            isLoading={isSubmitting || createEventMutation.isPending}
+        {isEditing ? (
+          <div className="flex gap-4 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onSuccess}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              className="flex-1 font-semibold tracking-tight"
+              disabled={isSubmitting || updateEventMutation.isPending}
+            >
+              <LoadingSwap
+                isLoading={isSubmitting || updateEventMutation.isPending}
+              >
+                Update Event
+              </LoadingSwap>
+            </Button>
+          </div>
+        ) : (
+          <Button
+            type="submit"
+            className="w-full font-semibold tracking-tight"
+            disabled={isSubmitting || createEventMutation.isPending}
           >
-            Create
-          </LoadingSwap>
-        </Button>
+            <LoadingSwap
+              isLoading={isSubmitting || createEventMutation.isPending}
+            >
+              Create Event
+            </LoadingSwap>
+          </Button>
+        )}
       </form>
     </Form>
   );

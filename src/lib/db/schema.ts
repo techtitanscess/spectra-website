@@ -1,10 +1,16 @@
 import {
   boolean,
   integer,
+  pgEnum,
   pgTable,
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+
+export const ticketStatusEnum = pgEnum("ticket_status", [
+  "pending",
+  "approved",
+]);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -83,6 +89,22 @@ export const event = pgTable("event", {
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
   createdBy: text("created_by")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const ticket = pgTable("ticket", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  phoneNumber: text("phone_number").notNull(),
+  status: ticketStatusEnum("status").default("pending").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  eventId: text("event_id")
+    .notNull()
+    .references(() => event.id, { onDelete: "cascade" }),
+  userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });

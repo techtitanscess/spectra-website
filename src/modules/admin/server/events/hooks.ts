@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getAllEvents,
+  getEventById,
   createEvent,
   updateEvent,
   deleteEvent,
@@ -21,6 +22,20 @@ export const useEvents = () => {
       }
       return result.data;
     },
+  });
+};
+
+export const useEvent = (id: string) => {
+  return useQuery({
+    queryKey: ["event", id],
+    queryFn: async () => {
+      const result = await getEventById(id);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    },
+    enabled: !!id,
   });
 };
 
