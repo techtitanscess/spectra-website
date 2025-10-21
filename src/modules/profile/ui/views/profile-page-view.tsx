@@ -20,6 +20,8 @@ import TicketCard from "@/modules/profile/ui/components/ticket-card";
 import TeamInviteCard from "@/modules/profile/ui/components/team-invite-card";
 import TeamDetailsCard from "@/modules/profile/ui/components/team-details-card";
 import { TeamInviteWithDetails } from "@/modules/hackerwrath/server/teams/actions";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 
 export default function ProfilePageView() {
   const { data: session, isPending: isLoading } = authClient.useSession();
@@ -163,122 +165,111 @@ export default function ProfilePageView() {
           </>
         )}
 
-        {/* My Teams Section */}
-        <>
-          <div className="flex flex-col items-center justify-center gap-4">
-            <span
-              className={cn(
-                codeFont.className,
-                "text-primary text-4xl font-semibold tracking-tight italic"
-              )}
-            >
+        {/* Tabs Section for Teams and Tickets */}
+        <Tabs defaultValue="teams" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="teams" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
               My Teams
-            </span>
-          </div>
+            </TabsTrigger>
+            <TabsTrigger value="tickets" className="flex items-center gap-2">
+              <Ticket className="h-4 w-4" />
+              My Tickets
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Teams Grid */}
-          {teamsLoading ? (
-            <div className="grid grid-cols-1 gap-6">
-              {[...Array(1)].map((_, i) => (
-                <Skeleton key={i} className="h-96 w-full rounded-xl" />
-              ))}
-            </div>
-          ) : teamsError ? (
-            <Card className="p-8">
-              <div className="flex flex-col items-center justify-center text-center space-y-4">
-                <AlertCircle className="h-12 w-12 text-destructive" />
-                <div>
-                  <h3 className="text-lg font-semibold">
-                    Failed to load teams
-                  </h3>
-                  <p className="text-muted-foreground">
-                    There was an error loading your teams. Please try again later.
-                  </p>
+          {/* My Teams Tab Content */}
+          <TabsContent value="teams" className="space-y-6">
+            {teamsLoading ? (
+              <div className="grid grid-cols-1 gap-6">
+                {[...Array(1)].map((_, i) => (
+                  <Skeleton key={i} className="h-96 w-full rounded-xl" />
+                ))}
+              </div>
+            ) : teamsError ? (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-destructive" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Failed to load teams
+                    </h3>
+                    <p className="text-muted-foreground">
+                      There was an error loading your teams. Please try again later.
+                    </p>
+                  </div>
                 </div>
+              </Card>
+            ) : userTeams.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6">
+                {userTeams.map((team: any) => (
+                  <TeamDetailsCard
+                    key={team.id}
+                    team={team}
+                    teamLeader={team.teamLeader}
+                    members={team.members}
+                  />
+                ))}
               </div>
-            </Card>
-          ) : userTeams.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6">
-              {userTeams.map((team: any) => (
-                <TeamDetailsCard
-                  key={team.id}
-                  team={team}
-                  teamLeader={team.teamLeader}
-                  members={team.members}
-                />
-              ))}
-            </div>
-          ) : (
-            <Card className="p-8">
-              <div className="text-center space-y-2">
-                <Users className="h-10 w-10 mx-auto text-muted-foreground" />
-                <h3 className="text-lg font-semibold">No teams yet</h3>
-                <p className="text-muted-foreground">Create or join a team to see it here.</p>
-              </div>
-            </Card>
-          )}
-        </>
-
-        {/* My Tickets Section */}
-        <div className="flex flex-col items-center justify-center gap-4">
-          <span
-            className={cn(
-              codeFont.className,
-              "text-primary text-4xl font-semibold tracking-tight italic"
+            ) : (
+              <Card className="p-8">
+                <div className="text-center space-y-2">
+                  <Users className="h-10 w-10 mx-auto text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">No teams yet</h3>
+                  <p className="text-muted-foreground">Create or join a team to see it here.</p>
+                </div>
+              </Card>
             )}
-          >
-            My Tickets
-          </span>
-        </div>
+          </TabsContent>
 
-        {/* Tickets Grid */}
-        {ticketsLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-64 w-full rounded-xl" />
-            ))}
-          </div>
-        ) : ticketsError ? (
-          <Card className="p-8">
-            <div className="flex flex-col items-center justify-center text-center space-y-4">
-              <AlertCircle className="h-12 w-12 text-destructive" />
-              <div>
-                <h3 className="text-lg font-semibold">
-                  Failed to load tickets
-                </h3>
-                <p className="text-muted-foreground">
-                  There was an error loading your tickets. Please try again
-                  later.
-                </p>
+          {/* My Tickets Tab Content */}
+          <TabsContent value="tickets" className="space-y-6">
+            {ticketsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-64 w-full rounded-xl" />
+                ))}
               </div>
-            </div>
-          </Card>
-        ) : userTickets && userTickets.length > 0 ? (
-          <>
-            {/* Tickets Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {userTickets.map((ticket: any) => (
-                <TicketCard key={ticket.id} ticket={ticket} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <Card className="p-8">
-            <div className="flex flex-col items-center justify-center text-center space-y-4">
-              <Ticket className="h-12 w-12 text-muted-foreground" />
-              <div>
-                <h3 className="text-lg font-semibold">No tickets yet</h3>
-                <p className="text-muted-foreground">
-                  You haven't requested any tickets yet. Browse events to get
-                  started!
-                </p>
+            ) : ticketsError ? (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-destructive" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Failed to load tickets
+                    </h3>
+                    <p className="text-muted-foreground">
+                      There was an error loading your tickets. Please try again
+                      later.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ) : userTickets && userTickets.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {userTickets.map((ticket: any) => (
+                  <TicketCard key={ticket.id} ticket={ticket} />
+                ))}
               </div>
-              <Button asChild>
-                <a href="/events">Browse Events</a>
-              </Button>
-            </div>
-          </Card>
-        )}
+            ) : (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <Ticket className="h-12 w-12 text-muted-foreground" />
+                  <div>
+                    <h3 className="text-lg font-semibold">No tickets yet</h3>
+                    <p className="text-muted-foreground">
+                      You haven't requested any tickets yet. Browse events to get
+                      started!
+                    </p>
+                  </div>
+                  <Button asChild>
+                    <a href="/events">Browse Events</a>
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

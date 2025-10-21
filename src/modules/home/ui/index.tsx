@@ -7,9 +7,15 @@ export default function LandingView() {
   return (
     <div className="flex flex-col">
       <HeroSection />
-      <EventsSection />
-      <ShopSection />
-      <SponsorsSection />
+      
+        <EventsSection />
+      
+      
+        <ShopSection />
+      
+      <div className="py-20">
+        <SponsorsSection />
+      </div>
     </div>
   );
 }

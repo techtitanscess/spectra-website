@@ -1,12 +1,11 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import { Users, Crown, User, Mail, Phone, Calendar, CheckCircle, Clock } from "lucide-react";
-import { codeFont } from "@/components/fonts";
+import { Terminal, TypingAnimation, AnimatedSpan } from "@/components/ui/terminal";
 import { cn } from "@/lib/utils";
 
 interface TeamMember {
@@ -31,8 +30,6 @@ interface TeamDetailsCardProps {
 }
 
 export default function TeamDetailsCard({ team, teamLeader, members = [] }: TeamDetailsCardProps) {
-
-
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -44,77 +41,66 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
   const totalMembers = 1 + members.length; // Leader + members
 
   return (
-    <Card className="bg-black border-primary border-2 relative overflow-hidden w-full">
-      {/* Terminal Header */}
-      <CardHeader className="bg-primary text-black">
-        <div className="flex items-center justify-between">
+    <Terminal className="min-h-fit w-full">
+      <TypingAnimation duration={20} className="text-muted-foreground">
+        {"> Loading team data..."}
+      </TypingAnimation>
+      
+      <TypingAnimation duration={20} className="text-primary">
+        ✓ Team loaded successfully
+      </TypingAnimation>
+      
+      <TypingAnimation duration={20} className="text-muted-foreground">
+        {"> Displaying team information:"}
+      </TypingAnimation>
+
+      <AnimatedSpan className="my-4 space-y-4">
+        {/* Team Header */}
+        <div className="flex items-center justify-between border-b border-primary/30 pb-2">
           <div className="flex items-center gap-2">
-            <div className="flex gap-1">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-            <CardTitle className={cn(codeFont.className, "text-lg")}>
-              Team Details
-            </CardTitle>
+            <Users className="h-5 w-5 text-primary" />
+            <span className="text-primary font-bold text-lg">{team.name}</span>
           </div>
           <Badge 
             className={cn(
-              "text-black font-bold",
-              team.status === "approved" ? "bg-green-400" : "bg-yellow-400"
+              "font-bold",
+              team.status === "approved" 
+                ? "bg-green-500 text-black" 
+                : "bg-yellow-500 text-black"
             )}
           >
-            {team.status === "approved" ? "Approved" : "Pending"}
+            {team.status === "approved" ? "✓ Approved" : "⏳ Pending"}
           </Badge>
-        </div>
-      </CardHeader>
-
-      <CardContent className={cn(codeFont.className, "bg-black text-primary p-4 space-y-4")}>
-        {/* Welcome Message */}
-        <div className="space-y-1 text-sm">
-          <div>
-            <span className="text-gray-500">&gt;</span> <span className="text-primary">Welcome to your team dashboard</span>
-          </div>
-          <div className="text-gray-500">
-            &gt; Here's your team information
-          </div>
         </div>
 
         {/* Team Info */}
-        <div className="space-y-3 mt-4">
-          <div className="flex items-center gap-2 text-lg font-bold">
-            <Users className="h-5 w-5" />
-            <span>&gt; Team: {team.name}</span>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6 border-l-2 border-primary/30">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm">
-                <Calendar className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-400">&gt; Created on:</span>
-                <span className="text-primary">{format(new Date(team.createdAt), "MMM dd, yyyy")}</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Users className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-400">&gt; Total members:</span>
-                <span className="text-primary font-bold">{totalMembers}</span>
-              </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Created:</span>
+              <span className="text-primary">{format(new Date(team.createdAt), "MMM dd, yyyy")}</span>
             </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2 text-sm">
-                {team.status === "approved" ? (
-                  <CheckCircle className="h-4 w-4 text-green-400" />
-                ) : (
-                  <Clock className="h-4 w-4 text-yellow-400" />
-                )}
-                <span className="text-gray-400">&gt; Status:</span>
-                <span className={cn(
-                  "font-bold capitalize",
-                  team.status === "approved" ? "text-green-400" : "text-yellow-400"
-                )}>
-                  {team.status}
-                </span>
-              </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4 text-muted-foreground" />
+              <span className="text-muted-foreground">Members:</span>
+              <span className="text-primary font-bold">{totalMembers}</span>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              {team.status === "approved" ? (
+                <CheckCircle className="h-4 w-4 text-green-400" />
+              ) : (
+                <Clock className="h-4 w-4 text-yellow-400" />
+              )}
+              <span className="text-muted-foreground">Status:</span>
+              <span className={cn(
+                "font-bold capitalize",
+                team.status === "approved" ? "text-green-400" : "text-yellow-400"
+              )}>
+                {team.status}
+              </span>
             </div>
           </div>
         </div>
@@ -124,10 +110,10 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
           <div className="space-y-3 pt-4 border-t border-primary/30">
             <div className="flex items-center gap-2">
               <Crown className="h-5 w-5 text-yellow-400" />
-              <span className="text-primary font-bold">&gt; Team Leader:</span>
+              <span className="text-primary font-bold">Team Leader</span>
             </div>
             
-            <div className="pl-6 border-l-2 border-yellow-400/50 space-y-2">
+            <div className="pl-6 space-y-2">
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
                   <AvatarFallback className="bg-yellow-500 text-black text-sm font-bold">
@@ -137,16 +123,16 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
                 <span className="text-primary font-semibold">{teamLeader.name}</span>
               </div>
               
-              <div className="space-y-1 text-sm">
+              <div className="space-y-1 text-sm pl-11">
                 <div className="flex items-center gap-2">
-                  <Mail className="h-3 w-3 text-gray-400" />
-                  <span className="text-gray-400">&gt; Email:</span>
+                  <Mail className="h-3 w-3 text-muted-foreground" />
+                  <span className="text-muted-foreground">Email:</span>
                   <span className="text-primary">{teamLeader.email}</span>
                 </div>
                 {teamLeader.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="h-3 w-3 text-gray-400" />
-                    <span className="text-gray-400">&gt; Phone:</span>
+                    <Phone className="h-3 w-3 text-muted-foreground" />
+                    <span className="text-muted-foreground">Phone:</span>
                     <span className="text-primary">{teamLeader.phone}</span>
                   </div>
                 )}
@@ -160,12 +146,12 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
           <div className="flex items-center gap-2">
             <User className="h-5 w-5 text-primary" />
             <span className="text-primary font-bold">
-              &gt; Team Members ({members.length})
+              Team Members ({members.length})
             </span>
           </div>
 
           {members.length > 0 ? (
-            <div className="pl-6 border-l-2 border-primary/50 space-y-3">
+            <div className="pl-6 space-y-3">
               {members.map((member, index) => (
                 <div key={member.id} className="space-y-2">
                   <div className="flex items-center gap-3">
@@ -182,14 +168,14 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
                   
                   <div className="pl-11 space-y-1 text-sm">
                     <div className="flex items-center gap-2">
-                      <Mail className="h-3 w-3 text-gray-400" />
-                      <span className="text-gray-400">&gt; Email:</span>
+                      <Mail className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-muted-foreground">Email:</span>
                       <span className="text-primary">{member.email}</span>
                     </div>
                     {member.phone && (
                       <div className="flex items-center gap-2">
-                        <Phone className="h-3 w-3 text-gray-400" />
-                        <span className="text-gray-400">&gt; Phone:</span>
+                        <Phone className="h-3 w-3 text-muted-foreground" />
+                        <span className="text-muted-foreground">Phone:</span>
                         <span className="text-primary">{member.phone}</span>
                       </div>
                     )}
@@ -198,19 +184,12 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
               ))}
             </div>
           ) : (
-            <div className="pl-6 text-gray-500 text-sm">
-              &gt; No other team members yet
+            <div className="pl-6 text-muted-foreground text-sm">
+              No other team members yet
             </div>
           )}
         </div>
-
-        {/* Team Summary */}
-        <div className="pt-4 border-t border-primary/30">
-          <div className="bg-gray-900 rounded p-2 text-xs text-gray-400">
-            Team ID: {team.id.slice(0, 8).toUpperCase()} | Created: {format(new Date(team.createdAt), "MMM dd, yyyy")} | {totalMembers} {totalMembers === 1 ? 'member' : 'members'}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      </AnimatedSpan>
+    </Terminal>
   );
 }
