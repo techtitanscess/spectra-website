@@ -9,13 +9,13 @@ import { Button } from "@/components/ui/button";
 export default function UserButton() {
   const { data: session, isPending: isLoading } = authClient.useSession();
 
-  if (isLoading || session == null || session.user == null) {
+  if (isLoading) {
     return <Skeleton className="h-10 w-10 rounded-full" />;
   }
 
   return session == null ? (
     <Link href="/sign-in">
-      <Button asChild variant="link" effect="underline">
+      <Button variant="link" effect="underline">
         Sign In
       </Button>
     </Link>

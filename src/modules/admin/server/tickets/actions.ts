@@ -167,6 +167,43 @@ export async function getTicketsByUser(userId: string) {
   }
 }
 
+export async function getUserTicketsWithDetails(userId: string) {
+  try {
+    const { ticket, event } = await import("@/lib/db/schema");
+    const { desc } = await import("drizzle-orm");
+
+    const userTickets = await db
+      .select({
+        id: ticket.id,
+        name: ticket.name,
+        phoneNumber: ticket.phoneNumber,
+        status: ticket.status,
+        createdAt: ticket.createdAt,
+        eventId: ticket.eventId,
+        userId: ticket.userId,
+        event: {
+          id: event.id,
+          name: event.name,
+          description: event.description,
+          imageUrl: event.imageUrl,
+          startDate: event.startDate,
+          endDate: event.endDate,
+          ticketCost: event.ticketCost,
+          totalHours: event.totalHours,
+        },
+      })
+      .from(ticket)
+      .leftJoin(event, eq(ticket.eventId, event.id))
+      .where(eq(ticket.userId, userId))
+      .orderBy(desc(ticket.createdAt));
+
+    return { success: true, data: userTickets };
+  } catch (error) {
+    console.error("Failed to get user tickets with details:", error);
+    return { success: false, error: "Failed to get user tickets with details" };
+  }
+}
+
 export async function getTicketsByEvent(eventId: string) {
   try {
     const eventTickets = await db

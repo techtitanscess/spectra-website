@@ -12,10 +12,20 @@ export const ticketStatusEnum = pgEnum("ticket_status", [
   "approved",
 ]);
 
+export const teamStatusEnum = pgEnum("team_status", ["pending", "approved"]);
+
+export const inviteStatusEnum = pgEnum("invite_status", [
+  "pending",
+  "accepted",
+  "declined",
+]);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
+  phone: text("phone").notNull().unique(),
+  dept: text("dept").notNull(),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),
@@ -107,4 +117,43 @@ export const ticket = pgTable("ticket", {
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const team = pgTable("team", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  status: teamStatusEnum("status").default("pending").notNull(),
+  teamLeaderId: text("team_leader_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  teamMembers: text("team_members")
+    .array()
+    .notNull()
+    .$default(() => []),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const teamInvite = pgTable("team_invite", {
+  id: text("id").primaryKey(),
+  teamId: text("team_id")
+    .notNull()
+    .references(() => team.id, { onDelete: "cascade" }),
+  inviteeId: text("invitee_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  inviterId: text("inviter_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  status: inviteStatusEnum("status").default("pending").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
 });

@@ -17,6 +17,14 @@ export const auth = betterAuth({
         required: true,
         default: false,
       },
+      phone: {
+        type: "string",
+        required: true,
+      },
+      dept: {
+        type: "string",
+        required: true,
+      },
     },
   },
   plugins: [openAPI()],

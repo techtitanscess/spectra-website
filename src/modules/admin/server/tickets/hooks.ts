@@ -9,6 +9,7 @@ import {
   updateTicket,
   deleteTicket,
   getTicketsByUser,
+  getUserTicketsWithDetails,
   getTicketsByEvent,
   approveTicket,
   CreateTicketData,
@@ -61,6 +62,20 @@ export const useUserTickets = (userId: string) => {
     queryKey: ["tickets", "user", userId],
     queryFn: async () => {
       const result = await getTicketsByUser(userId);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return result.data;
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useUserTicketsWithDetails = (userId: string) => {
+  return useQuery({
+    queryKey: ["tickets", "user", "details", userId],
+    queryFn: async () => {
+      const result = await getUserTicketsWithDetails(userId);
       if (!result.success) {
         throw new Error(result.error);
       }

@@ -20,6 +20,7 @@ import { PhoneInput } from "@/components/ui/phone-input";
 import { authClient } from "@/lib/auth-client";
 import { useCreateTicket } from "@/modules/admin/server/tickets/hooks";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(1).min(3).max(100),
@@ -101,12 +102,15 @@ export default function TicketForm({
                 <PhoneInput {...field} defaultCountry="IN" />
               </FormControl>
               <FormDescription>
-                You may receive a call for ticket approval.
+                This number may receive a call for ticket approval.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+        <div className="flex items-center justify-center">
+          <Image src="/assets/gpay.jpeg" alt="gpay" width={200} height={200} className="rounded-lg" />
+        </div>
 
         <Button
           type="submit"
