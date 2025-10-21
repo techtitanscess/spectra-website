@@ -3,7 +3,7 @@
 import React from "react";
 import { authClient } from "@/lib/auth-client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,10 +11,7 @@ import {
   Ticket,
   AlertCircle,
   Users,
-  Inbox,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import { codeFont } from "@/components/fonts";
 import { cn } from "@/lib/utils";
 import { useUserTicketsWithDetails } from "@/modules/admin/server/tickets/hooks";
@@ -22,6 +19,7 @@ import { useUserTeamInvites, useUserTeamsWithDetails } from "@/modules/hackerwra
 import TicketCard from "@/modules/profile/ui/components/ticket-card";
 import TeamInviteCard from "@/modules/profile/ui/components/team-invite-card";
 import TeamDetailsCard from "@/modules/profile/ui/components/team-details-card";
+import { TeamInviteWithDetails } from "@/modules/hackerwrath/server/teams/actions";
 
 export default function ProfilePageView() {
   const { data: session, isPending: isLoading } = authClient.useSession();
@@ -147,7 +145,7 @@ export default function ProfilePageView() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {teamInvites.map((invite) => (
+                {teamInvites.map((invite: TeamInviteWithDetails) => (
                   <TeamInviteCard
                     key={invite.id}
                     invite={invite}
@@ -160,54 +158,60 @@ export default function ProfilePageView() {
         )}
 
         {/* My Teams Section */}
-        {userTeams.length > 0 && (
-          <>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <span
-                className={cn(
-                  codeFont.className,
-                  "text-primary text-4xl font-semibold tracking-tight italic"
-                )}
-              >
-                My Teams
-              </span>
-            </div>
+        <>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <span
+              className={cn(
+                codeFont.className,
+                "text-primary text-4xl font-semibold tracking-tight italic"
+              )}
+            >
+              My Teams
+            </span>
+          </div>
 
-            {/* Teams Grid */}
-            {teamsLoading ? (
-              <div className="grid grid-cols-1 gap-6">
-                {[...Array(1)].map((_, i) => (
-                  <Skeleton key={i} className="h-96 w-full rounded-xl" />
-                ))}
-              </div>
-            ) : teamsError ? (
-              <Card className="p-8">
-                <div className="flex flex-col items-center justify-center text-center space-y-4">
-                  <AlertCircle className="h-12 w-12 text-destructive" />
-                  <div>
-                    <h3 className="text-lg font-semibold">
-                      Failed to load teams
-                    </h3>
-                    <p className="text-muted-foreground">
-                      There was an error loading your teams. Please try again later.
-                    </p>
-                  </div>
+          {/* Teams Grid */}
+          {teamsLoading ? (
+            <div className="grid grid-cols-1 gap-6">
+              {[...Array(1)].map((_, i) => (
+                <Skeleton key={i} className="h-96 w-full rounded-xl" />
+              ))}
+            </div>
+          ) : teamsError ? (
+            <Card className="p-8">
+              <div className="flex flex-col items-center justify-center text-center space-y-4">
+                <AlertCircle className="h-12 w-12 text-destructive" />
+                <div>
+                  <h3 className="text-lg font-semibold">
+                    Failed to load teams
+                  </h3>
+                  <p className="text-muted-foreground">
+                    There was an error loading your teams. Please try again later.
+                  </p>
                 </div>
-              </Card>
-            ) : (
-              <div className="grid grid-cols-1 gap-6">
-                {userTeams.map((team: any) => (
-                  <TeamDetailsCard
-                    key={team.id}
-                    team={team}
-                    teamLeader={team.teamLeader}
-                    members={team.members}
-                  />
-                ))}
               </div>
-            )}
-          </>
-        )}
+            </Card>
+          ) : userTeams.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6">
+              {userTeams.map((team: any) => (
+                <TeamDetailsCard
+                  key={team.id}
+                  team={team}
+                  teamLeader={team.teamLeader}
+                  members={team.members}
+                />
+              ))}
+            </div>
+          ) : (
+            <Card className="p-8">
+              <div className="text-center space-y-2">
+                <Users className="h-10 w-10 mx-auto text-muted-foreground" />
+                <h3 className="text-lg font-semibold">No teams yet</h3>
+                <p className="text-muted-foreground">Create or join a team to see it here.</p>
+              </div>
+            </Card>
+          )}
+        </>
 
         {/* My Tickets Section */}
         <div className="flex flex-col items-center justify-center gap-4">
@@ -247,7 +251,7 @@ export default function ProfilePageView() {
           <>
             {/* Tickets Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {userTickets.map((ticket) => (
+              {userTickets.map((ticket: any) => (
                 <TicketCard key={ticket.id} ticket={ticket} />
               ))}
             </div>

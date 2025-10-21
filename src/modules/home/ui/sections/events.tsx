@@ -31,7 +31,7 @@ export default function EventsSection() {
           duration={20}
           className="text-primary flex items-center"
         >
-          ~ Displaying 4 of 30 events:
+          {`~ Displaying 4 of ${events.length} events:`}
         </TypingAnimation>
         <AnimatedSpan className="my-1 h-[600px]">
           <EventsMenu items={events} />

@@ -23,6 +23,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function AdminDashboardView() {
   const { data: stats, isLoading, error } = useAdminDashboardStats();
 
+  // Calculate approved tickets (sold tickets)
+  const ticketsSold = Math.max(
+    0,
+    (stats?.totalTickets ?? 0) - (stats?.pendingTickets ?? 0)
+  );
+
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -97,9 +103,9 @@ export default function AdminDashboardView() {
             <Ticket className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalTickets || 0}</div>
+            <div className="text-2xl font-bold">{ticketsSold}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">{stats?.pendingTickets || 0}</span> pending approval
+              <span className="text-orange-600">{stats?.pendingTickets || 0}</span> pending approval
             </p>
           </CardContent>
         </Card>

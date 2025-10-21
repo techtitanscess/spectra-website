@@ -1,4 +1,4 @@
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import { format } from 'date-fns';
 import QRCode from 'qrcode';
 
@@ -113,8 +113,10 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
     pdf.text(`> Contact: ${ticket.phoneNumber}`, ticketX + 8, yPos);
 
     yPos += 8;
-    pdf.setTextColor(39, 201, 63);
-    pdf.text('> Status: CONFIRMED ✓', ticketX + 8, yPos);
+    const isApproved = ticket.status === "approved";
+    // Green for approved, amber for pending
+    isApproved ? pdf.setTextColor(39, 201, 63) : pdf.setTextColor(255, 189, 46);
+    pdf.text(`> Status: ${isApproved ? "CONFIRMED ✓" : "PENDING ⏳"}`, ticketX + 8, yPos);
 
 
     const separatorX = ticketX + leftSectionWidth;
@@ -134,21 +136,26 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
             eventId: ticket.event.id,
             holderName: ticket.name,
             eventName: ticket.event.name,
-            date: format(ticket.event.startDate, 'yyyy-MM-dd'),
-            verified: true
+            date: format(ticket.event.startDate, 'yyyy-MM-dd')
+            // Consider adding a server-generated signature instead
         });
 
         const qrCodeDataURL = await QRCode.toDataURL(qrData, {
             width: 120,
-            margin: 1,
+            margin: 4,
             color: {
-                dark: '#9CFF00',
-                light: '#000000'
+                dark: '#000000',      // Black for maximum contrast
+                light: '#FFFFFF'      // White background
             }
         });
 
         const qrSize = 35;
-        pdf.addImage(qrCodeDataURL, 'PNG', rightSectionX + (rightSectionWidth - qrSize) / 2, ticketY + 15, qrSize, qrSize);
+        const qrX = rightSectionX + (rightSectionWidth - qrSize) / 2;
+        const qrY = ticketY + 15;
+        // White backing (quiet zone)
+        pdf.setFillColor(255, 255, 255);
+        pdf.rect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4, 'F');
+        pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
     } catch (error) {
 
         pdf.setFillColor(20, 20, 20);

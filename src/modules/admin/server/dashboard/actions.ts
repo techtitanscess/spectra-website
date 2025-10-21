@@ -118,23 +118,29 @@ export async function getDashboardStats(): Promise<DashboardStats> {
         type: 'user' as const,
         title: 'New User Registration',
         description: `${u.name} joined the platform`,
-        time: formatTimeAgo(u.createdAt),
+        createdAt: u.createdAt,
       })),
       ...recentTickets.map(t => ({
         type: 'ticket' as const,
         title: 'Ticket Request',
         description: `${t.name} requested ticket for ${t.eventName}`,
-        time: formatTimeAgo(t.createdAt),
+        createdAt: t.createdAt,
       })),
       ...recentTeams.map(t => ({
         type: 'team' as const,
         title: 'Team Created',
         description: `Team "${t.name}" was created`,
-        time: formatTimeAgo(t.createdAt),
+        createdAt: t.createdAt,
       })),
     ]
-    .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
-    .slice(0, 8);
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 8)
+    .map(item => ({
+      type: item.type,
+      title: item.title,
+      description: item.description,
+      time: formatTimeAgo(item.createdAt),
+    }));
 
     return {
       totalUsers: totalUsersResult[0]?.count || 0,

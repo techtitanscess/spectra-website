@@ -11,6 +11,13 @@ export interface CreateTeamData {
   memberEmails: string[];
 }
 
+export interface TeamMemberPublic {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
 export interface TeamWithDetails {
   id: string;
   name: string;
@@ -29,6 +36,19 @@ export interface TeamWithDetails {
     name: string;
     email: string;
   }>;
+}
+
+export interface TeamWithFullDetails {
+  id: string;
+  name: string;
+  status: "pending" | "approved";
+  teamLeaderId: string;
+  teamMembers: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  teamLeader: TeamMemberPublic;
+  members: TeamMemberPublic[];
+  totalMembers: number;
 }
 
 export interface TeamInviteWithDetails {
@@ -277,7 +297,7 @@ export async function getUserTeams(userId: string) {
   }
 }
 
-export async function getUserTeamsWithDetails(userId: string) {
+export async function getUserTeamsWithDetails(userId: string): Promise<TeamWithFullDetails[]> {
   try {
     // Get teams where user is leader or member with leader details
     const teams = await db
