@@ -299,7 +299,8 @@ export async function getUserTeams(userId: string) {
 
 export async function getUserTeamsWithDetails(userId: string): Promise<TeamWithFullDetails[]> {
   try {
-    // Get teams where user is leader or member with leader details
+    // Get all teams with leader details, then filter in JavaScript
+    // This is needed because checking array membership in SQL is complex
     const teams = await db
       .select({
         id: team.id,
@@ -317,17 +318,13 @@ export async function getUserTeamsWithDetails(userId: string): Promise<TeamWithF
         },
       })
       .from(team)
-      .leftJoin(user, eq(team.teamLeaderId, user.id))
-      .where(
-        or(
-          eq(team.teamLeaderId, userId)
-          // Note: This is a simple check. In production, you might want to use a proper array contains query
-        )
-      );
+      .leftJoin(user, eq(team.teamLeaderId, user.id));
 
-    // Filter teams where user is leader or member
+    // Filter teams where user is leader or member and teamLeader exists
     const filteredTeams = teams.filter(
-      (t) => t.teamLeaderId === userId || t.teamMembers.includes(userId)
+      (t) =>
+        t.teamLeader && // Ensure teamLeader is not null
+        (t.teamLeaderId === userId || t.teamMembers.includes(userId))
     );
 
     // Fetch team members details for each team
@@ -358,8 +355,16 @@ export async function getUserTeamsWithDetails(userId: string): Promise<TeamWithF
           members = memberDetails;
         }
 
+
         return {
-          ...teamData,
+          id: teamData.id,
+          name: teamData.name,
+          status: teamData.status,
+          teamLeaderId: teamData.teamLeaderId,
+          teamMembers: teamData.teamMembers,
+          createdAt: teamData.createdAt,
+          updatedAt: teamData.updatedAt,
+          teamLeader: teamData.teamLeader!,
           members,
           totalMembers: 1 + members.length, // Leader + members
         };
