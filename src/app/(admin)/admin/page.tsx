@@ -1,3 +1,5 @@
-export default function Page() {
-  return <div>hello world</div>;
+import AdminDashboardView from "@/modules/admin/ui/views/dashboard";
+
+export default function AdminPage() {
+  return <AdminDashboardView />;
 }

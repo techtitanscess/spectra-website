@@ -276,3 +276,79 @@ export async function getUserTeams(userId: string) {
     return [];
   }
 }
+
+export async function getUserTeamsWithDetails(userId: string) {
+  try {
+    // Get teams where user is leader or member with leader details
+    const teams = await db
+      .select({
+        id: team.id,
+        name: team.name,
+        status: team.status,
+        teamLeaderId: team.teamLeaderId,
+        teamMembers: team.teamMembers,
+        createdAt: team.createdAt,
+        updatedAt: team.updatedAt,
+        teamLeader: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+        },
+      })
+      .from(team)
+      .leftJoin(user, eq(team.teamLeaderId, user.id))
+      .where(
+        or(
+          eq(team.teamLeaderId, userId)
+          // Note: This is a simple check. In production, you might want to use a proper array contains query
+        )
+      );
+
+    // Filter teams where user is leader or member
+    const filteredTeams = teams.filter(
+      (t) => t.teamLeaderId === userId || t.teamMembers.includes(userId)
+    );
+
+    // Fetch team members details for each team
+    const teamsWithMembers = await Promise.all(
+      filteredTeams.map(async (teamData) => {
+        let members: Array<{
+          id: string;
+          name: string;
+          email: string;
+          phone: string;
+        }> = [];
+
+        if (teamData.teamMembers && teamData.teamMembers.length > 0) {
+          const memberDetails = await db
+            .select({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+            })
+            .from(user)
+            .where(
+              or(
+                ...teamData.teamMembers.map((memberId) => eq(user.id, memberId))
+              )
+            );
+
+          members = memberDetails;
+        }
+
+        return {
+          ...teamData,
+          members,
+          totalMembers: 1 + members.length, // Leader + members
+        };
+      })
+    );
+
+    return teamsWithMembers;
+  } catch (error) {
+    console.error("Error getting user teams with details:", error);
+    return [];
+  }
+}

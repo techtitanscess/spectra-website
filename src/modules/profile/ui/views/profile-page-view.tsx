@@ -10,7 +10,6 @@ import {
   Mail,
   Ticket,
   AlertCircle,
-  MailIcon,
   Users,
   Inbox,
 } from "lucide-react";
@@ -19,9 +18,10 @@ import { format } from "date-fns";
 import { codeFont } from "@/components/fonts";
 import { cn } from "@/lib/utils";
 import { useUserTicketsWithDetails } from "@/modules/admin/server/tickets/hooks";
-import { useUserTeamInvites } from "@/modules/hackerwrath/server/teams/hooks";
+import { useUserTeamInvites, useUserTeamsWithDetails } from "@/modules/hackerwrath/server/teams/hooks";
 import TicketCard from "@/modules/profile/ui/components/ticket-card";
 import TeamInviteCard from "@/modules/profile/ui/components/team-invite-card";
+import TeamDetailsCard from "@/modules/profile/ui/components/team-details-card";
 
 export default function ProfilePageView() {
   const { data: session, isPending: isLoading } = authClient.useSession();
@@ -36,6 +36,12 @@ export default function ProfilePageView() {
     isLoading: invitesLoading,
     error: invitesError,
   } = useUserTeamInvites(session?.user?.id || "");
+
+  const {
+    data: userTeams = [],
+    isLoading: teamsLoading,
+    error: teamsError,
+  } = useUserTeamsWithDetails(session?.user?.id || "");
 
   if (isLoading) {
     return (
@@ -97,9 +103,6 @@ export default function ProfilePageView() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <MailIcon />
-            </Button>
             <Button variant="destructive" onClick={() => authClient.signOut()}>
               Sign Out
             </Button>
@@ -149,6 +152,56 @@ export default function ProfilePageView() {
                     key={invite.id}
                     invite={invite}
                     userId={session?.user?.id || ""}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        )}
+
+        {/* My Teams Section */}
+        {userTeams.length > 0 && (
+          <>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <span
+                className={cn(
+                  codeFont.className,
+                  "text-primary text-4xl font-semibold tracking-tight italic"
+                )}
+              >
+                My Teams
+              </span>
+            </div>
+
+            {/* Teams Grid */}
+            {teamsLoading ? (
+              <div className="grid grid-cols-1 gap-6">
+                {[...Array(1)].map((_, i) => (
+                  <Skeleton key={i} className="h-96 w-full rounded-xl" />
+                ))}
+              </div>
+            ) : teamsError ? (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-destructive" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Failed to load teams
+                    </h3>
+                    <p className="text-muted-foreground">
+                      There was an error loading your teams. Please try again later.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 gap-6">
+                {userTeams.map((team: any) => (
+                  <TeamDetailsCard
+                    key={team.id}
+                    team={team}
+                    teamLeader={team.teamLeader}
+                    members={team.members}
                   />
                 ))}
               </div>

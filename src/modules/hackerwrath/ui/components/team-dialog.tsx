@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import TeamForm from "./team-form";
 import { Users, Plus } from "lucide-react";
+import AuthOnly from "@/components/auth/auth-only";
 
 interface TeamDialogProps {
   children?: React.ReactNode;
@@ -29,34 +30,47 @@ export default function TeamDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        {children || (
-          <Button
-            size="lg"
-            className={`rounded-full px-8 py-6 text-base sm:text-lg tracking-tight font-semibold ${triggerClassName || ""}`}
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            Create Team
-          </Button>
-        )}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-2xl">
-            <Users className="h-6 w-6" />
-            Create Your Hackerwrath Team
-          </DialogTitle>
-          <DialogDescription className="text-base">
-            Assemble your dream team for Hackerwrath 2025! You can invite up to
-            3 team members. They will receive an invitation that they can accept
-            or decline.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="mt-6">
-          <TeamForm onSuccess={handleSuccess} />
-        </div>
-      </DialogContent>
-    </Dialog>
+    <AuthOnly 
+      fallback={
+        <Button
+          size="lg"
+          className={`rounded-full px-8 py-6 text-base sm:text-lg tracking-tight font-semibold opacity-50 cursor-not-allowed ${triggerClassName || ""}`}
+          disabled
+        >
+          <Plus className="mr-2 h-5 w-5" />
+          Sign In to Create Team
+        </Button>
+      }
+    >
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          {children || (
+            <Button
+              size="lg"
+              className={`rounded-full px-8 py-6 text-base sm:text-lg tracking-tight font-semibold ${triggerClassName || ""}`}
+            >
+              <Plus className="mr-2 h-5 w-5" />
+              Create Team
+            </Button>
+          )}
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader className="space-y-3">
+            <DialogTitle className="flex items-center gap-2 text-2xl">
+              <Users className="h-6 w-6" />
+              Create Your Hackerwrath Team
+            </DialogTitle>
+            <DialogDescription className="text-base">
+              Assemble your dream team for Hackerwrath 2025! You can invite up to
+              3 team members. They will receive an invitation that they can accept
+              or decline.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-6">
+            <TeamForm onSuccess={handleSuccess} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    </AuthOnly>
   );
 }

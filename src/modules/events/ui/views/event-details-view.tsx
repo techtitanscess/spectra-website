@@ -16,6 +16,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Header from "@/components/shared/header";
 import { Button } from "@/components/ui/button";
 import TicketDialog from "@/modules/tickets/ui/components/ticket-dialog";
+import { codeFont } from "@/components/fonts";
+import { cn } from "@/lib/utils";
 
 export default function EventDetailsView() {
   const params = useParams();
@@ -141,32 +143,50 @@ export default function EventDetailsView() {
           </Card>
           <div className="flex flex-col justify-between">
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b-primary border-b-1 py-2">
-                <span className="font-semibold text-xl">Event Duration</span>
-                <span className="text-muted-foreground">
+              <div className="flex items-center justify-between border-b border-primary/20 py-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-lg">Event Duration</span>
+                </div>
+                <span className="text-muted-foreground font-medium">
                   {event.totalHours} hours
                 </span>
               </div>
-              <div className="flex items-center justify-between border-b-primary border-b-1 py-2">
-                <span className="font-semibold text-xl">Starts On</span>
-                <span className="text-muted-foreground ">
+
+              <div className="flex items-center justify-between border-b border-primary/20 py-3">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-lg">Starts On</span>
+                </div>
+                <span className="text-muted-foreground text-right text-sm">
                   {formatDate(event.startDate)}
                 </span>
               </div>
-              <div className="flex items-center justify-between border-b-primary border-b-1 py-2">
-                <span className="font-semibold text-xl">Ends On</span>
-                <span className="text-muted-foreground ">
+
+              <div className="flex items-center justify-between border-b border-primary/20 py-3">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-lg">Ends On</span>
+                </div>
+                <span className="text-muted-foreground text-right text-sm">
                   {formatDate(event.endDate)}
                 </span>
               </div>
-              <div className="flex items-center justify-between border-b-primary border-b-1 py-2">
-                <span className="font-semibold text-xl">Ticket Price</span>
-                <span className="text-muted-foreground ">
-                  {formatPrice(event.ticketCost)}
+
+              <div className="flex items-center justify-between border-b border-primary/20 py-3">
+                <div className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-primary" />
+                  <span className="font-semibold text-lg">Ticket Price</span>
+                </div>
+                <span className="text-primary font-bold text-xl">
+                  ₹{event.ticketCost}
                 </span>
               </div>
             </div>
-            <TicketDialog eventId={event.id} />
+
+            <div className="mt-6">
+              <TicketDialog eventId={event.id} />
+            </div>
           </div>
         </div>
       </div>

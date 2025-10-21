@@ -7,6 +7,7 @@ import {
   getUserTeamInvites,
   respondToTeamInvite,
   getUserTeams,
+  getUserTeamsWithDetails,
   type CreateTeamData,
   type TeamInviteWithDetails,
 } from "./actions";
@@ -65,6 +66,14 @@ export function useUserTeams(userId: string) {
   return useQuery({
     queryKey: ["teams", userId],
     queryFn: () => getUserTeams(userId),
+    enabled: !!userId,
+  });
+}
+
+export function useUserTeamsWithDetails(userId: string) {
+  return useQuery({
+    queryKey: ["teams-with-details", userId],
+    queryFn: () => getUserTeamsWithDetails(userId),
     enabled: !!userId,
   });
 }
