@@ -12,7 +12,7 @@ import React from "react";
 
 export default function EventsSection() {
   return (
-    <div className="flex my-[50px] scroll-mt-20 flex-col items-center justify-center gap-4" id="events">
+    <div className="flex flex-col items-center justify-center gap-4 pt-32 pb-[50px]" id="events">
       <Header
         title="Whats Happening?"
         subtitle="Discover the latest events happening at Spectra."

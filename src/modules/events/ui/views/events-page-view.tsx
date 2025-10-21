@@ -63,12 +63,12 @@ export default function EventsPageView() {
   }));
 
   return (
-    <div className="flex flex-col h-screen justify-center gap-6 w-full items-center">
+    <div className="flex flex-col gap-6 w-full items-center" style={{ paddingTop: '8rem', minHeight: 'calc(100vh - 8rem)' }}>
       <Header
         title="Spectra Events"
         subtitle="Discover the latest events happening at Spectra."
       />
-      <div className="h-[600px] w-[90%]">
+      <div className="h-[350px] w-[90%] md:w-[80%]">
         <EventsMenu items={menuItems} />
       </div>
     </div>

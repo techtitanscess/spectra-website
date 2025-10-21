@@ -60,19 +60,20 @@ export default function ProfilePageView() {
 
   if (!session?.user) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="max-w-2xl mx-auto text-center space-y-4">
-          <h1 className="text-2xl font-bold">Not Signed In</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+        <div className="w-full max-w-md text-center space-y-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Not Signed In</h1>
+          <p className="text-sm sm:text-base text-muted-foreground px-4">
             Please sign in to view your profile.
           </p>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto px-8">
             <a href="/sign-in">Sign In</a>
           </Button>
         </div>
       </div>
     );
   }
+
 
   const { user } = session;
   const initials = user.name
@@ -101,10 +102,15 @@ export default function ProfilePageView() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="destructive" onClick={() => authClient.signOut()}>
+            <Button
+              variant="destructive"
+              onClick={() => authClient.signOut()}
+              className="text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-1 sm:py-2"
+            >
               Sign Out
             </Button>
           </div>
+
         </div>
 
         {/* Team Invites Section */}
