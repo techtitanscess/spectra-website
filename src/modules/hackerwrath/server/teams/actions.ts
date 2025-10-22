@@ -11,6 +11,13 @@ export interface CreateTeamData {
   memberEmails: string[];
 }
 
+export interface TeamMemberPublic {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+}
+
 export interface TeamWithDetails {
   id: string;
   name: string;
@@ -29,6 +36,19 @@ export interface TeamWithDetails {
     name: string;
     email: string;
   }>;
+}
+
+export interface TeamWithFullDetails {
+  id: string;
+  name: string;
+  status: "pending" | "approved";
+  teamLeaderId: string;
+  teamMembers: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  teamLeader: TeamMemberPublic;
+  members: TeamMemberPublic[];
+  totalMembers: number;
 }
 
 export interface TeamInviteWithDetails {
@@ -273,6 +293,87 @@ export async function getUserTeams(userId: string) {
     return filteredTeams;
   } catch (error) {
     console.error("Error getting user teams:", error);
+    return [];
+  }
+}
+
+export async function getUserTeamsWithDetails(userId: string): Promise<TeamWithFullDetails[]> {
+  try {
+    // Get all teams with leader details, then filter in JavaScript
+    // This is needed because checking array membership in SQL is complex
+    const teams = await db
+      .select({
+        id: team.id,
+        name: team.name,
+        status: team.status,
+        teamLeaderId: team.teamLeaderId,
+        teamMembers: team.teamMembers,
+        createdAt: team.createdAt,
+        updatedAt: team.updatedAt,
+        teamLeader: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+        },
+      })
+      .from(team)
+      .leftJoin(user, eq(team.teamLeaderId, user.id));
+
+    // Filter teams where user is leader or member and teamLeader exists
+    const filteredTeams = teams.filter(
+      (t) =>
+        t.teamLeader && // Ensure teamLeader is not null
+        (t.teamLeaderId === userId || t.teamMembers.includes(userId))
+    );
+
+    // Fetch team members details for each team
+    const teamsWithMembers = await Promise.all(
+      filteredTeams.map(async (teamData) => {
+        let members: Array<{
+          id: string;
+          name: string;
+          email: string;
+          phone: string;
+        }> = [];
+
+        if (teamData.teamMembers && teamData.teamMembers.length > 0) {
+          const memberDetails = await db
+            .select({
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              phone: user.phone,
+            })
+            .from(user)
+            .where(
+              or(
+                ...teamData.teamMembers.map((memberId) => eq(user.id, memberId))
+              )
+            );
+
+          members = memberDetails;
+        }
+
+
+        return {
+          id: teamData.id,
+          name: teamData.name,
+          status: teamData.status,
+          teamLeaderId: teamData.teamLeaderId,
+          teamMembers: teamData.teamMembers,
+          createdAt: teamData.createdAt,
+          updatedAt: teamData.updatedAt,
+          teamLeader: teamData.teamLeader!,
+          members,
+          totalMembers: 1 + members.length, // Leader + members
+        };
+      })
+    );
+
+    return teamsWithMembers;
+  } catch (error) {
+    console.error("Error getting user teams with details:", error);
     return [];
   }
 }

@@ -9,6 +9,7 @@ import TextType from "@/modules/home/ui/components/typewriter";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import Beams from "../components/hero-bg";
+import SplitText from "@/components/ui/split-text";
 
 export default function HeroSection() {
 
@@ -25,6 +26,17 @@ export default function HeroSection() {
     },
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
   const buttonGroupVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -32,26 +44,46 @@ export default function HeroSection() {
       y: 0,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.4,
+        delayChildren: 0.1,
       },
     },
   };
   return (
     <section className="flex h-screen flex-col items-center">
       <motion.div
-        variants={buttonGroupVariants}
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
         className="z-10 flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center"
       >
-        <TextType
-          text={["Spectra 2025"]}
-          typingSpeed={75}
-          pauseDuration={1500}
-          showCursor={false}
-          className={cn(
-            codeFont.className,
-            "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
-          )}
-        />
+        <motion.div variants={itemVariants}>
+          <SplitText
+            text="Spectra 2025"
+            className={cn(
+              codeFont.className,
+              "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
+            )}
+            delay={100}
+            duration={0.6}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-100px"
+            textAlign="center"
+          />
+          {/* <TextType
+            text={["Spectra 2025"]}
+            typingSpeed={75}
+            pauseDuration={1500}
+            showCursor={false}
+            className={cn(
+              codeFont.className,
+              "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
+            )}
+          /> */}
+        </motion.div>
 
         <motion.p
           variants={itemVariants}
@@ -62,24 +94,31 @@ export default function HeroSection() {
         </motion.p>
 
         <motion.div
-          variants={itemVariants}
+          variants={buttonGroupVariants}
           className="flex flex-col sm:flex-row gap-4"
         >
-          <Button
-            size="lg"
-            className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold"
-          >
-            Get Tickets
-          </Button>
-          <Link href="#events" className="rounded-full">
-            <Button
-              size="lg"
-              variant="outline"
-              className="px-8 py-6 text-base sm:text-lg font-semibold"
-            >
-              View Events
-            </Button>
-          </Link> 
+          <motion.div variants={itemVariants}>
+            <Link href="/events" className="rounded-full">
+              <Button
+                size="lg"
+                className="rounded-full px-8 py-6 text-base sm:text-lg font-semibold"
+              >
+                Get Tickets
+              </Button>
+            </Link>
+          </motion.div>
+
+          <motion.div variants={itemVariants}>
+            <Link href="#events" className="rounded-full">
+              <Button
+                size="lg"
+                variant="outline"
+                className="px-8 py-6 text-base sm:text-lg font-semibold"
+              >
+                View Events
+              </Button>
+            </Link>
+          </motion.div>
         </motion.div>
       </motion.div>
       <div className="absolute h-screen w-full opacity-80">

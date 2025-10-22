@@ -1,30 +1,33 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
   Ticket,
   AlertCircle,
-  MailIcon,
   Users,
-  Inbox,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 import { codeFont } from "@/components/fonts";
 import { cn } from "@/lib/utils";
 import { useUserTicketsWithDetails } from "@/modules/admin/server/tickets/hooks";
-import { useUserTeamInvites } from "@/modules/hackerwrath/server/teams/hooks";
+import { useUserTeamInvites, useUserTeamsWithDetails } from "@/modules/hackerwrath/server/teams/hooks";
 import TicketCard from "@/modules/profile/ui/components/ticket-card";
 import TeamInviteCard from "@/modules/profile/ui/components/team-invite-card";
+import TeamDetailsCard from "@/modules/profile/ui/components/team-details-card";
+import { TeamInviteWithDetails } from "@/modules/hackerwrath/server/teams/actions";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+
 
 export default function ProfilePageView() {
   const { data: session, isPending: isLoading } = authClient.useSession();
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState("teams");
   const {
     data: userTickets,
     isLoading: ticketsLoading,
@@ -36,6 +39,20 @@ export default function ProfilePageView() {
     isLoading: invitesLoading,
     error: invitesError,
   } = useUserTeamInvites(session?.user?.id || "");
+
+  const {
+    data: userTeams = [],
+    isLoading: teamsLoading,
+    error: teamsError,
+  } = useUserTeamsWithDetails(session?.user?.id || "");
+
+  // Handle URL parameters for tab navigation
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "tickets" || tab === "teams") {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   if (isLoading) {
     return (
@@ -56,19 +73,20 @@ export default function ProfilePageView() {
 
   if (!session?.user) {
     return (
-      <div className="container mx-auto py-8 px-4">
-        <div className="max-w-2xl mx-auto text-center space-y-4">
-          <h1 className="text-2xl font-bold">Not Signed In</h1>
-          <p className="text-muted-foreground">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] px-4">
+        <div className="w-full max-w-md text-center space-y-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">Not Signed In</h1>
+          <p className="text-sm sm:text-base text-muted-foreground px-4">
             Please sign in to view your profile.
           </p>
-          <Button asChild>
+          <Button asChild className="w-full sm:w-auto px-8">
             <a href="/sign-in">Sign In</a>
           </Button>
         </div>
       </div>
     );
   }
+
 
   const { user } = session;
   const initials = user.name
@@ -82,28 +100,30 @@ export default function ProfilePageView() {
       <div className="w-[90%] md:w-[70%] flex flex-col gap-6">
         {/* Profile Header */}
         <div className="border border-b-2 border-b-primary p-4 rounded-xl flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-semibold">
+          <div className="flex items-center space-x-2 md:space-x-6">
+            <Avatar className="h-10 w-10 md:h-20 md:w-20">
+              <AvatarFallback className="bg-primary text-primary-foreground text-lg  md:text-2xl font-semibold">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h1 className="text-3xl font-bold">{user.name}</h1>
-              <p className="text-lg text-muted-foreground flex items-center gap-2">
+              <h1 className="text-xl md:text-3xl font-bold">{user.name}</h1>
+              <p className="text-xs md:text-lg text-muted-foreground flex items-center gap-2">
                 <Mail className="h-4 w-4" />
                 {user.email}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <MailIcon />
-            </Button>
-            <Button variant="destructive" onClick={() => authClient.signOut()}>
+            <Button
+              variant="destructive"
+              onClick={() => authClient.signOut()}
+              className="text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-1 sm:py-2"
+            >
               Sign Out
             </Button>
           </div>
+
         </div>
 
         {/* Team Invites Section */}
@@ -144,7 +164,7 @@ export default function ProfilePageView() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {teamInvites.map((invite) => (
+                {teamInvites.map((invite: TeamInviteWithDetails) => (
                   <TeamInviteCard
                     key={invite.id}
                     invite={invite}
@@ -156,66 +176,111 @@ export default function ProfilePageView() {
           </>
         )}
 
-        {/* My Tickets Section */}
-        <div className="flex flex-col items-center justify-center gap-4">
-          <span
-            className={cn(
-              codeFont.className,
-              "text-primary text-4xl font-semibold tracking-tight italic"
-            )}
-          >
-            My Tickets
-          </span>
-        </div>
+        {/* Tabs Section for Teams and Tickets */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="teams" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              My Teams
+            </TabsTrigger>
+            <TabsTrigger value="tickets" className="flex items-center gap-2">
+              <Ticket className="h-4 w-4" />
+              My Tickets
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Tickets Grid */}
-        {ticketsLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <Skeleton key={i} className="h-64 w-full rounded-xl" />
-            ))}
-          </div>
-        ) : ticketsError ? (
-          <Card className="p-8">
-            <div className="flex flex-col items-center justify-center text-center space-y-4">
-              <AlertCircle className="h-12 w-12 text-destructive" />
-              <div>
-                <h3 className="text-lg font-semibold">
-                  Failed to load tickets
-                </h3>
-                <p className="text-muted-foreground">
-                  There was an error loading your tickets. Please try again
-                  later.
-                </p>
+          {/* My Teams Tab Content */}
+          <TabsContent value="teams" className="space-y-6">
+            {teamsLoading ? (
+              <div className="grid grid-cols-1 gap-6">
+                {[...Array(1)].map((_, i) => (
+                  <Skeleton key={i} className="h-96 w-full rounded-xl" />
+                ))}
               </div>
-            </div>
-          </Card>
-        ) : userTickets && userTickets.length > 0 ? (
-          <>
-            {/* Tickets Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {userTickets.map((ticket) => (
-                <TicketCard key={ticket.id} ticket={ticket} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <Card className="p-8">
-            <div className="flex flex-col items-center justify-center text-center space-y-4">
-              <Ticket className="h-12 w-12 text-muted-foreground" />
-              <div>
-                <h3 className="text-lg font-semibold">No tickets yet</h3>
-                <p className="text-muted-foreground">
-                  You haven't requested any tickets yet. Browse events to get
-                  started!
-                </p>
+            ) : teamsError ? (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-destructive" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Failed to load teams
+                    </h3>
+                    <p className="text-muted-foreground">
+                      There was an error loading your teams. Please try again later.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ) : userTeams.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6">
+                {userTeams.map((team: any) => (
+                  <TeamDetailsCard
+                    key={team.id}
+                    team={team}
+                    teamLeader={team.teamLeader}
+                    members={team.members}
+                  />
+                ))}
               </div>
-              <Button asChild>
-                <a href="/events">Browse Events</a>
-              </Button>
-            </div>
-          </Card>
-        )}
+            ) : (
+              <Card className="p-8">
+                <div className="text-center space-y-2">
+                  <Users className="h-10 w-10 mx-auto text-muted-foreground" />
+                  <h3 className="text-lg font-semibold">No teams yet</h3>
+                  <p className="text-muted-foreground">Create or join a team to see it here.</p>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+
+          {/* My Tickets Tab Content */}
+          <TabsContent value="tickets" className="space-y-6">
+            {ticketsLoading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-64 w-full rounded-xl" />
+                ))}
+              </div>
+            ) : ticketsError ? (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <AlertCircle className="h-12 w-12 text-destructive" />
+                  <div>
+                    <h3 className="text-lg font-semibold">
+                      Failed to load tickets
+                    </h3>
+                    <p className="text-muted-foreground">
+                      There was an error loading your tickets. Please try again
+                      later.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            ) : userTickets && userTickets.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {userTickets.map((ticket: any) => (
+                  <TicketCard key={ticket.id} ticket={ticket} />
+                ))}
+              </div>
+            ) : (
+              <Card className="p-8">
+                <div className="flex flex-col items-center justify-center text-center space-y-4">
+                  <Ticket className="h-12 w-12 text-muted-foreground" />
+                  <div>
+                    <h3 className="text-lg font-semibold">No tickets yet</h3>
+                    <p className="text-muted-foreground">
+                      You haven't requested any tickets yet. Browse events to get
+                      started!
+                    </p>
+                  </div>
+                  <Button asChild>
+                    <a href="/events">Browse Events</a>
+                  </Button>
+                </div>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

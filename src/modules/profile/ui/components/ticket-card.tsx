@@ -1,13 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, CreditCard, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Calendar, Clock, MapPin, CreditCard, Loader2, Download, QrCode } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { codeFont } from "@/components/fonts";
 import { LoadingSwap } from "@/components/ui/loading-swap";
+import { toast } from "sonner";
+import { generateTicketPDF } from "@/lib/ticket-generator";
 
 export type UserTicket = {
   id: string;
@@ -34,12 +37,39 @@ interface TicketCardProps {
 }
 
 export default function TicketCard({ ticket }: TicketCardProps) {
+  const [isDownloading, setIsDownloading] = useState(false);
   const isPending = ticket.status === "pending";
   const isApproved = ticket.status === "approved";
 
   if (!ticket.event) {
     return null;
   }
+
+  const handleDownloadTicket = async () => {
+    setIsDownloading(true);
+    try {
+      if (!ticket.event) {
+        toast.error("Event information not available");
+        return;
+      }
+
+      await generateTicketPDF({
+        id: ticket.id,
+        name: ticket.name,
+        phoneNumber: ticket.phoneNumber,
+        status: ticket.status,
+        createdAt: ticket.createdAt,
+        event: ticket.event
+      });
+      
+      toast.success("Ticket downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating ticket:", error);
+      toast.error("Failed to generate ticket. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
   return (
     <div
       className={cn(
@@ -88,11 +118,28 @@ export default function TicketCard({ ticket }: TicketCardProps) {
           <Loader2 className="animate-spin" />
         </div>
       ) : (
-        <span className="text-center py-3">
-          {format(ticket.event?.startDate, "p")} to{" "}
-          {format(ticket.event?.endDate, "p")} | {ticket.event?.totalHours}{" "}
-          hours
-        </span>
+        <div className="flex flex-col gap-2 py-3">
+          <span className="text-center">
+            {format(ticket.event?.startDate, "p")} to{" "}
+            {format(ticket.event?.endDate, "p")} | {ticket.event?.totalHours}{" "}
+            hours
+          </span>
+          <div className="flex gap-2 px-4">
+            <Button
+              onClick={handleDownloadTicket}
+              disabled={isDownloading}
+              className="flex-1 bg-black text-primary hover:bg-gray-800"
+              size="sm"
+            >
+              <LoadingSwap isLoading={isDownloading}>
+                <div className="flex items-center gap-2">
+                  <Download className="h-4 w-4" />
+                  Download Ticket
+                </div>
+              </LoadingSwap>
+            </Button>
+          </div>
+        </div>
       )}
     </div>
     // <Card className="h-full">
