@@ -17,7 +17,7 @@ export default function Navbar() {
             height={32}
             className="rotate-45"
           />
-          <span className="text-3xl tracking-tight">Spectra</span>
+          <span className="text-3xl md:flex hidden tracking-tight">Spectra</span>
         </Link>
         
         <div className="flex items-center gap-4">

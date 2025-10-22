@@ -68,7 +68,7 @@ export default function EventsPageView() {
         title="Spectra Events"
         subtitle="Discover the latest events happening at Spectra."
       />
-      <div className="h-[350px] w-[90%] md:w-[80%]">
+      <div className="h-[600px] w-[90%] md:w-[80%]">
         <EventsMenu items={menuItems} />
       </div>
     </div>

@@ -9,6 +9,7 @@ import TextType from "@/modules/home/ui/components/typewriter";
 import Link from "next/link";
 import { motion, type Variants } from "motion/react";
 import Beams from "../components/hero-bg";
+import SplitText from "@/components/ui/split-text";
 
 export default function HeroSection() {
 
@@ -56,7 +57,23 @@ export default function HeroSection() {
         className="z-10 flex flex-1 flex-col items-center justify-center gap-6 px-4 text-center"
       >
         <motion.div variants={itemVariants}>
-          <TextType
+          <SplitText
+            text="Spectra 2025"
+            className={cn(
+              codeFont.className,
+              "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
+            )}
+            delay={100}
+            duration={0.6}
+            ease="power3.out"
+            splitType="chars"
+            from={{ opacity: 0, y: 40 }}
+            to={{ opacity: 1, y: 0 }}
+            threshold={0.1}
+            rootMargin="-100px"
+            textAlign="center"
+          />
+          {/* <TextType
             text={["Spectra 2025"]}
             typingSpeed={75}
             pauseDuration={1500}
@@ -65,7 +82,7 @@ export default function HeroSection() {
               codeFont.className,
               "text-[36px] tracking-tight sm:text-[48px] md:text-[60px] lg:text-[72px]"
             )}
-          />
+          /> */}
         </motion.div>
 
         <motion.p

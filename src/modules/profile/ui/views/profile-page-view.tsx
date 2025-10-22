@@ -100,15 +100,15 @@ export default function ProfilePageView() {
       <div className="w-[90%] md:w-[70%] flex flex-col gap-6">
         {/* Profile Header */}
         <div className="border border-b-2 border-b-primary p-4 rounded-xl flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="bg-primary text-primary-foreground text-2xl font-semibold">
+          <div className="flex items-center space-x-2 md:space-x-6">
+            <Avatar className="h-10 w-10 md:h-20 md:w-20">
+              <AvatarFallback className="bg-primary text-primary-foreground text-lg  md:text-2xl font-semibold">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-              <h1 className="text-3xl font-bold">{user.name}</h1>
-              <p className="text-lg text-muted-foreground flex items-center gap-2">
+              <h1 className="text-xl md:text-3xl font-bold">{user.name}</h1>
+              <p className="text-xs md:text-lg text-muted-foreground flex items-center gap-2">
                 <Mail className="h-4 w-4" />
                 {user.email}
               </p>
