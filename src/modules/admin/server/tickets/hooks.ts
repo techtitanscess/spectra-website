@@ -99,6 +99,22 @@ export const useEventTickets = (eventId: string) => {
   });
 };
 
+export const useUserTicketForEvent = (userId: string, eventId: string) => {
+  return useQuery({
+    queryKey: ["tickets", "user", userId, "event", eventId],
+    queryFn: async () => {
+      const result = await getUserTicketsWithDetails(userId);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      // Find ticket for the specific event
+      const eventTicket = result.data?.find((ticket: any) => ticket.eventId === eventId);
+      return eventTicket || null;
+    },
+    enabled: !!userId && !!eventId,
+  });
+};
+
 export const useCreateTicket = () => {
   const queryClient = useQueryClient();
 
@@ -117,6 +133,9 @@ export const useCreateTicket = () => {
       });
       queryClient.invalidateQueries({
         queryKey: ["tickets", "event", variables.eventId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["tickets", "user", variables.userId, "event", variables.eventId],
       });
       toast.success("Ticket requested successfully!");
     },

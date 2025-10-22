@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { useSearchParams } from "next/navigation";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -25,6 +26,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function ProfilePageView() {
   const { data: session, isPending: isLoading } = authClient.useSession();
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState("teams");
   const {
     data: userTickets,
     isLoading: ticketsLoading,
@@ -42,6 +45,14 @@ export default function ProfilePageView() {
     isLoading: teamsLoading,
     error: teamsError,
   } = useUserTeamsWithDetails(session?.user?.id || "");
+
+  // Handle URL parameters for tab navigation
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "tickets" || tab === "teams") {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
   if (isLoading) {
     return (
@@ -166,7 +177,7 @@ export default function ProfilePageView() {
         )}
 
         {/* Tabs Section for Teams and Tickets */}
-        <Tabs defaultValue="teams" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="teams" className="flex items-center gap-2">
               <Users className="h-4 w-4" />

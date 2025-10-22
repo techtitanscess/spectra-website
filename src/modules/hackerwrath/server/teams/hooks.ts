@@ -17,9 +17,13 @@ export function useCreateTeam() {
 
   return useMutation({
     mutationFn: createTeam,
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["teams"] });
       queryClient.invalidateQueries({ queryKey: ["team-invites"] });
+      queryClient.invalidateQueries({ queryKey: ["teams-with-details"] });
+      queryClient.invalidateQueries({ 
+        queryKey: ["user-has-team", variables.teamLeaderId] 
+      });
     },
   });
 }
@@ -55,9 +59,13 @@ export function useRespondToTeamInvite() {
       userId: string;
       response: "accepted" | "declined";
     }) => respondToTeamInvite(inviteId, userId, response),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["team-invites"] });
       queryClient.invalidateQueries({ queryKey: ["teams"] });
+      queryClient.invalidateQueries({ queryKey: ["teams-with-details"] });
+      queryClient.invalidateQueries({ 
+        queryKey: ["user-has-team", variables.userId] 
+      });
     },
   });
 }
@@ -74,6 +82,17 @@ export function useUserTeamsWithDetails(userId: string) {
   return useQuery({
     queryKey: ["teams-with-details", userId],
     queryFn: () => getUserTeamsWithDetails(userId),
+    enabled: !!userId,
+  });
+}
+
+export function useUserHasTeam(userId: string) {
+  return useQuery({
+    queryKey: ["user-has-team", userId],
+    queryFn: async () => {
+      const teams = await getUserTeamsWithDetails(userId);
+      return teams.length > 0 ? teams[0] : null;
+    },
     enabled: !!userId,
   });
 }
