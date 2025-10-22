@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import TeamForm from "./team-form";
 import { Users, Plus } from "lucide-react";
 import AuthOnly from "@/components/auth/auth-only";
+import Link from "next/link";
 
 interface TeamDialogProps {
   children?: React.ReactNode;
@@ -32,14 +33,15 @@ export default function TeamDialog({
   return (
     <AuthOnly 
       fallback={
-        <Button
-          size="lg"
-          className={`rounded-full px-8 py-6 text-base sm:text-lg tracking-tight font-semibold opacity-50 cursor-not-allowed ${triggerClassName || ""}`}
-          disabled
-        >
-          <Plus className="mr-2 h-5 w-5" />
-          Sign In to Create Team
-        </Button>
+        <Link href="/sign-in">
+          <Button
+            size="lg"
+            className={`rounded-full px-8 py-6 text-base sm:text-lg tracking-tight font-semibold ${triggerClassName || ""}`}
+          >
+            <Plus className="mr-2 h-5 w-5" />
+            Create Team
+          </Button>
+        </Link>
       }
     >
       <Dialog open={open} onOpenChange={setOpen}>
