@@ -26,6 +26,7 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   phone: text("phone").notNull().unique(),
   dept: text("dept").notNull(),
+  college: text("college").notNull(),
   emailVerified: boolean("email_verified")
     .$defaultFn(() => false)
     .notNull(),

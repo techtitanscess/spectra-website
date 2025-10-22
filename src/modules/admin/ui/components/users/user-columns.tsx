@@ -103,47 +103,6 @@ export const createUserColumns = ({
     },
   },
   {
-    accessorKey: "emailVerified",
-    header: ({ column }) => {
-      return (
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Status
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const user = row.original;
-      return (
-        <div className="flex flex-col items-center text-center space-y-1">
-          <div className="flex items-center gap-1">
-            {user.emailVerified ? (
-              <CheckCircle className="h-4 w-4 text-green-500" />
-            ) : (
-              <XCircle className="h-4 w-4 text-red-500" />
-            )}
-            <span className="text-sm">
-              {user.emailVerified ? "Verified" : "Unverified"}
-            </span>
-          </div>
-          {user.isAdmin && (
-            <Badge
-              variant="default"
-              className="bg-blue-100 text-blue-800 hover:bg-blue-200"
-            >
-              Admin
-            </Badge>
-          )}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (

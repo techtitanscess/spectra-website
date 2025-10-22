@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,6 +28,7 @@ const formSchema = z.object({
   password: z.string().min(6, "Password must be at least 8 characters"),
   phone: z.string().min(10, "Phone number is required").max(15),
   dept: z.string().min(1, "Department is required"),
+  college: z.string().min(4, "College is required"),
 });
 
 export default function SignUpForm() {
@@ -39,6 +41,7 @@ export default function SignUpForm() {
       password: "",
       phone: "",
       dept: "",
+      college: ""
     },
   });
 
@@ -116,7 +119,9 @@ export default function SignUpForm() {
               <FormControl className="w-full">
                 <PhoneInput placeholder="" {...field} defaultCountry="IN" />
               </FormControl>
-
+              <FormDescription>
+                Will be used to verify your tickets.
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -132,7 +137,6 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input placeholder="" type="email" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -146,13 +150,28 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input placeholder="" type="text" {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
+        <FormField
+          control={form.control}
+          name="college"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>College</FormLabel>
+              <FormControl>
+                <Input placeholder="" type="text" {...field} />
+              </FormControl>
+              <FormDescription>
+                Name of college followed by city/campus.
+              </FormDescription>
 
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="password"

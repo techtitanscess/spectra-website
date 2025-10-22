@@ -25,6 +25,10 @@ export const auth = betterAuth({
         type: "string",
         required: true,
       },
+      college: {
+        type: "string",
+        required: true,
+      },
     },
   },
   plugins: [openAPI()],
