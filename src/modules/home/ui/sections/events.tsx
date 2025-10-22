@@ -5,14 +5,18 @@ import {
   Terminal,
   TypingAnimation,
 } from "@/components/ui/terminal";
-import { events } from "@/lib/constants";
+import { getLatestEventsForHome } from "@/modules/events/server/actions";
 import Link from "next/link";
 import React from "react";
 
+export default async function EventsSection() {
+  const events = await getLatestEventsForHome();
 
-export default function EventsSection() {
   return (
-    <div className="flex flex-col items-center justify-center gap-4 pt-32 pb-[50px]" id="events">
+    <div
+      className="flex flex-col items-center justify-center gap-4 pt-32 pb-[50px]"
+      id="events"
+    >
       <Header
         title="Whats Happening?"
         subtitle="Discover the latest events happening at Spectra."
@@ -36,17 +40,33 @@ export default function EventsSection() {
         <AnimatedSpan className="my-1 h-[600px]">
           <EventsMenu items={events} />
         </AnimatedSpan>
-        <AnimatedSpan>
-          <span className="text-muted-foreground">
-            Want to see more?{" "}
-            <Link
-              href="/events"
-              className="text-primary underline underline-offset-4"
-            >
-              View All Events
-            </Link>
-          </span>
-        </AnimatedSpan>
+        {events.length > 0 ? (
+          <AnimatedSpan>
+            <span className="text-muted-foreground">
+              Want to see more?{" "}
+              <Link
+                href="/events"
+                className="text-primary underline underline-offset-4"
+              >
+                View All Events
+              </Link>
+            </span>
+          </AnimatedSpan>
+        ) : (
+          <>
+            <TypingAnimation duration={20} className="text-destructive">
+              x Error: No events found!
+            </TypingAnimation>
+            <TypingAnimation duration={20} className="text-muted-foreground">
+              {"> No events available at the moment"}
+            </TypingAnimation>
+            <AnimatedSpan>
+              <span className="text-muted-foreground">
+                Check back later for exciting events!
+              </span>
+            </AnimatedSpan>
+          </>
+        )}
       </Terminal>
     </div>
   );

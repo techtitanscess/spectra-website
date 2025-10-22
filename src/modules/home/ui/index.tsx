@@ -3,16 +3,15 @@ import HeroSection from "./sections/hero";
 import ShopSection from "./sections/shop";
 import SponsorsSection from "./sections/sponsors";
 
-export default function LandingView() {
+export default async function LandingView() {
   return (
     <div className="flex flex-col">
       <HeroSection />
-      
-        <EventsSection />
-      
-      
-        <ShopSection />
-      
+
+      <EventsSection />
+
+      <ShopSection />
+
       <div className="py-20">
         <SponsorsSection />
       </div>

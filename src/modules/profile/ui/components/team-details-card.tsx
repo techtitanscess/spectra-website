@@ -45,11 +45,11 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
       <TypingAnimation duration={20} className="text-muted-foreground">
         {"> Loading team data..."}
       </TypingAnimation>
-      
+
       <TypingAnimation duration={20} className="text-primary">
         ✓ Team loaded successfully
       </TypingAnimation>
-      
+
       <TypingAnimation duration={20} className="text-muted-foreground">
         {"> Displaying team information:"}
       </TypingAnimation>
@@ -61,11 +61,11 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
             <Users className="h-5 w-5 text-primary" />
             <span className="text-primary font-bold text-lg">{team.name}</span>
           </div>
-          <Badge 
+          <Badge
             className={cn(
               "font-bold",
-              team.status === "approved" 
-                ? "bg-green-500 text-black" 
+              team.status === "approved"
+                ? "bg-green-500 text-black"
                 : "bg-yellow-500 text-black"
             )}
           >
@@ -79,7 +79,9 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Created:</span>
-              <span className="text-primary">{format(new Date(team.createdAt), "MMM dd, yyyy")}</span>
+              <span className="text-primary">
+                {format(new Date(team.createdAt), "MMM dd, yyyy")}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />
@@ -95,10 +97,14 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
                 <Clock className="h-4 w-4 text-yellow-400" />
               )}
               <span className="text-muted-foreground">Status:</span>
-              <span className={cn(
-                "font-bold capitalize",
-                team.status === "approved" ? "text-green-400" : "text-yellow-400"
-              )}>
+              <span
+                className={cn(
+                  "font-bold capitalize",
+                  team.status === "approved"
+                    ? "text-green-400"
+                    : "text-yellow-400"
+                )}
+              >
                 {team.status}
               </span>
             </div>
@@ -112,7 +118,7 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
               <Crown className="h-5 w-5 text-yellow-400" />
               <span className="text-primary font-bold">Team Leader</span>
             </div>
-            
+
             <div className="pl-6 space-y-2">
               <div className="flex items-center gap-3">
                 <Avatar className="h-8 w-8">
@@ -120,20 +126,30 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
                     {getInitials(teamLeader.name)}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-primary font-semibold">{teamLeader.name}</span>
+                <span className="text-primary font-semibold">
+                  {teamLeader.name}
+                </span>
               </div>
-              
-              <div className="space-y-1 text-sm pl-11">
+
+              <div className="space-y-1 pl-11">
                 <div className="flex items-center gap-2">
                   <Mail className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-muted-foreground">Email:</span>
-                  <span className="text-primary">{teamLeader.email}</span>
+                  <span className="text-xs md:text-sm text-muted-foreground">
+                    Email:
+                  </span>
+                  <span className="text-xs  md:text-sm text-primary">
+                    {teamLeader.email}
+                  </span>
                 </div>
                 {teamLeader.phone && (
                   <div className="flex items-center gap-2">
                     <Phone className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-muted-foreground">Phone:</span>
-                    <span className="text-primary">{teamLeader.phone}</span>
+                    <span className="text-xs md:text-sm text-muted-foreground">
+                      Phone:
+                    </span>
+                    <span className="text-xs md:text-sm text-primary">
+                      {teamLeader.phone}
+                    </span>
                   </div>
                 )}
               </div>
@@ -160,23 +176,36 @@ export default function TeamDetailsCard({ team, teamLeader, members = [] }: Team
                         {getInitials(member.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-primary font-semibold">{member.name}</span>
-                    <Badge variant="outline" className="text-xs border-primary text-primary">
+                    <span className="text-primary font-semibold">
+                      {member.name}
+                    </span>
+                    <Badge
+                      variant="outline"
+                      className="text-xs border-primary text-primary"
+                    >
                       #{index + 1}
                     </Badge>
                   </div>
-                  
+
                   <div className="pl-11 space-y-1 text-sm">
                     <div className="flex items-center gap-2">
                       <Mail className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-muted-foreground">Email:</span>
-                      <span className="text-primary">{member.email}</span>
+                      <span className="text-xs md:text-sm text-muted-foreground">
+                        Email:
+                      </span>
+                      <span className="text-xs md:text-sm text-primary">
+                        {member.email}
+                      </span>
                     </div>
                     {member.phone && (
                       <div className="flex items-center gap-2">
                         <Phone className="h-3 w-3 text-muted-foreground" />
-                        <span className="text-muted-foreground">Phone:</span>
-                        <span className="text-primary">{member.phone}</span>
+                        <span className="text-xs md:text-sm text-muted-foreground">
+                          Phone:
+                        </span>
+                        <span className="text-xs md:text-sm text-primary">
+                          {member.phone}
+                        </span>
                       </div>
                     )}
                   </div>
