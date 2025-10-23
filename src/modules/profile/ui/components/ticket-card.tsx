@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, CreditCard, Loader2, Download, QrCode } from "lucide-react";
+import { Calendar, Clock, MapPin, CreditCard, Loader2, Download, QrCode, MessageCircle } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { codeFont } from "@/components/fonts";
@@ -25,6 +25,7 @@ export type UserTicket = {
     name: string;
     description: string;
     imageUrl?: string | null;
+    whatsappUrl?: string | null;
     startDate: Date;
     endDate: Date;
     ticketCost: number;
@@ -128,7 +129,10 @@ export default function TicketCard({ ticket }: TicketCardProps) {
             <Button
               onClick={handleDownloadTicket}
               disabled={isDownloading}
-              className="flex-1 bg-black text-primary hover:bg-gray-800"
+              className={cn(
+                "bg-black text-primary hover:bg-gray-800",
+                ticket.event?.whatsappUrl ? "flex-1" : "flex-1"
+              )}
               size="sm"
             >
               <LoadingSwap isLoading={isDownloading}>
@@ -138,6 +142,24 @@ export default function TicketCard({ ticket }: TicketCardProps) {
                 </div>
               </LoadingSwap>
             </Button>
+            
+            {ticket.event?.whatsappUrl && ticket.event.whatsappUrl.trim() !== '' && (
+              <Button
+                asChild
+                className="flex-1 bg-green-600 text-white hover:bg-green-700"
+                size="sm"
+              >
+                <a
+                  href={ticket.event.whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  Join WhatsApp
+                </a>
+              </Button>
+            )}
           </div>
         </div>
       )}

@@ -186,6 +186,7 @@ export async function getUserTicketsWithDetails(userId: string) {
           name: event.name,
           description: event.description,
           imageUrl: event.imageUrl,
+          whatsappUrl: event.whatsappUrl,
           startDate: event.startDate,
           endDate: event.endDate,
           ticketCost: event.ticketCost,

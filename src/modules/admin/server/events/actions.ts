@@ -9,6 +9,7 @@ export type CreateEventData = {
   name: string;
   description: string;
   imageUrl?: string;
+  whatsappUrl?: string;
   startDate: Date;
   endDate: Date;
   totalHours: number;
@@ -29,6 +30,7 @@ export async function createEvent(data: CreateEventData) {
         name: data.name,
         description: data.description,
         imageUrl: data.imageUrl,
+        whatsappUrl: data.whatsappUrl,
         startDate: data.startDate,
         endDate: data.endDate,
         totalHours: data.totalHours,

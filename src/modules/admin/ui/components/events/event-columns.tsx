@@ -19,6 +19,7 @@ export type Event = {
   name: string;
   description: string;
   imageUrl?: string | null;
+  whatsappUrl?: string | null;
   startDate: Date;
   endDate: Date;
   totalHours: number;
