@@ -34,6 +34,19 @@ const formSchema = z
     endDate: z.date(),
     description: z.string(),
     imageUrl: z.string().url().optional().or(z.literal("")),
+    whatsappUrl: z.string()
+      .optional()
+      .refine((val) => {
+        if (!val || val === "") return true;
+        try {
+          const url = new URL(val);
+          return url.hostname === "chat.whatsapp.com" || url.hostname === "wa.me";
+        } catch {
+          return false;
+        }
+      }, {
+        message: "Please enter a valid WhatsApp group link (chat.whatsapp.com or wa.me)",
+      }),
     totalHours: z.number().min(1),
     ticketCost: z.number().min(0),
   })
@@ -56,6 +69,7 @@ export default function EventForm({ event, onSuccess }: EventFormProps) {
       endDate: new Date(),
       description: "",
       imageUrl: "",
+      whatsappUrl: "",
       totalHours: 1,
       ticketCost: 0,
     },
@@ -77,6 +91,7 @@ export default function EventForm({ event, onSuccess }: EventFormProps) {
         endDate: new Date(event.endDate),
         description: event.description,
         imageUrl: event.imageUrl || "",
+        whatsappUrl: event.whatsappUrl || "",
         totalHours: event.totalHours,
         ticketCost: event.ticketCost,
       });
@@ -212,6 +227,27 @@ export default function EventForm({ event, onSuccess }: EventFormProps) {
               </FormControl>
               <FormDescription>
                 URL of the event banner/poster image
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="whatsappUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>WhatsApp Group URL (Optional)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="https://chat.whatsapp.com/..."
+                  type="url"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription>
+                WhatsApp group link for approved ticket holders to join
               </FormDescription>
               <FormMessage />
             </FormItem>

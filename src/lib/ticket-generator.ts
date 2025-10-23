@@ -16,6 +16,7 @@ export interface TicketData {
         endDate: Date;
         ticketCost: number;
         totalHours: number;
+        whatsappUrl?: string | null;
     };
 }
 
@@ -119,6 +120,8 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
     pdf.text(`> Status: ${isApproved ? "CONFIRMED ✓" : "PENDING ⏳"}`, ticketX + 8, yPos);
 
 
+
+
     const separatorX = ticketX + leftSectionWidth;
     pdf.setDrawColor(156, 255, 0);
     for (let y = ticketY + 10; y < ticketY + ticketHeight - 10; y += 4) {
@@ -131,31 +134,42 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
 
 
     try {
-        const qrData = JSON.stringify({
-            ticketId: ticket.id,
-            eventId: ticket.event.id,
-            holderName: ticket.name,
-            eventName: ticket.event.name,
-            date: format(ticket.event.startDate, 'yyyy-MM-dd')
-            // Consider adding a server-generated signature instead
-        });
+
+        const qrData = ticket.event.whatsappUrl && ticket.event.whatsappUrl.trim() !== ''
+            ? ticket.event.whatsappUrl
+            : JSON.stringify({
+                ticketId: ticket.id,
+                eventId: ticket.event.id,
+                holderName: ticket.name,
+                eventName: ticket.event.name,
+                date: format(ticket.event.startDate, 'yyyy-MM-dd')
+            });
 
         const qrCodeDataURL = await QRCode.toDataURL(qrData, {
             width: 120,
             margin: 4,
             color: {
-                dark: '#000000',      // Black for maximum contrast
-                light: '#FFFFFF'      // White background
+                dark: '#000000',
+                light: '#FFFFFF'
             }
         });
 
         const qrSize = 35;
         const qrX = rightSectionX + (rightSectionWidth - qrSize) / 2;
         const qrY = ticketY + 15;
-        // White backing (quiet zone)
+       
         pdf.setFillColor(255, 255, 255);
         pdf.rect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4, 'F');
         pdf.addImage(qrCodeDataURL, 'PNG', qrX, qrY, qrSize, qrSize);
+
+       
+        pdf.setFont('courier', 'normal');
+        pdf.setFontSize(6);
+        pdf.setTextColor(200, 200, 200);
+        const qrLabel = ticket.event.whatsappUrl && ticket.event.whatsappUrl.trim() !== ''
+            ? 'SCAN FOR WHATSAPP'
+            : 'SCAN FOR DETAILS';
+        pdf.text(qrLabel, qrX + qrSize / 2, qrY + qrSize + 5, { align: 'center' });
     } catch (error) {
 
         pdf.setFillColor(20, 20, 20);
@@ -166,6 +180,12 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
         pdf.setFontSize(6);
         pdf.setTextColor(156, 255, 0);
         pdf.text('QR_CODE', rightSectionX + 22.5, ticketY + 35, { align: 'center' });
+
+        pdf.setTextColor(200, 200, 200);
+        const fallbackLabel = ticket.event.whatsappUrl && ticket.event.whatsappUrl.trim() !== ''
+            ? 'SCAN FOR WHATSAPP'
+            : 'SCAN FOR DETAILS';
+        pdf.text(fallbackLabel, rightSectionX + 22.5, ticketY + 55, { align: 'center' });
     }
 
 
@@ -191,7 +211,7 @@ export const generateTicketPDF = async (ticket: TicketData): Promise<void> => {
     pdf.setTextColor(100, 100, 100);
     pdf.text(`ID: ${ticket.id.slice(0, 8).toUpperCase()}`, rightSectionX + rightSectionWidth / 2, ticketY + 78, { align: 'center' });
 
-    // Generation timestamp
+    
     pdf.setFontSize(5);
     pdf.text(`${format(new Date(), 'yyyy-MM-dd HH:mm')}`, rightSectionX + rightSectionWidth / 2, ticketY + 85, { align: 'center' });
 

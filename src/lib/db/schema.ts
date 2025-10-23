@@ -93,6 +93,7 @@ export const event = pgTable("event", {
   endDate: timestamp("end_date").notNull(),
   totalHours: integer("total_hours").notNull(),
   ticketCost: integer("ticket_cost").notNull(),
+  whatsappUrl : text("whatsapp_url"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
