@@ -62,7 +62,7 @@ export default function TicketCard({ ticket }: TicketCardProps) {
         createdAt: ticket.createdAt,
         event: ticket.event
       });
-      
+
       toast.success("Ticket downloaded successfully!");
     } catch (error) {
       console.error("Error generating ticket:", error);
@@ -125,38 +125,35 @@ export default function TicketCard({ ticket }: TicketCardProps) {
             {format(ticket.event?.endDate, "p")} | {ticket.event?.totalHours}{" "}
             hours
           </span>
-          <div className="flex gap-2 px-4">
+          <div className="flex flex-col sm:flex-row gap-2 px-4">
             <Button
               onClick={handleDownloadTicket}
               disabled={isDownloading}
-              className={cn(
-                "bg-black text-primary hover:bg-gray-800",
-                ticket.event?.whatsappUrl ? "flex-1" : "flex-1"
-              )}
+              className="w-full sm:flex-1 bg-black text-primary hover:bg-gray-800"
               size="sm"
             >
               <LoadingSwap isLoading={isDownloading}>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   <Download className="h-4 w-4" />
-                  Download Ticket
+                  <span className="text-xs sm:text-sm">Download Ticket</span>
                 </div>
               </LoadingSwap>
             </Button>
-            
+
             {ticket.event?.whatsappUrl && ticket.event.whatsappUrl.trim() !== '' && (
               <Button
                 asChild
-                className="flex-1 bg-green-600 text-white hover:bg-green-700"
+                className="w-full sm:flex-1 bg-black text-primary hover:bg-gray-800"
                 size="sm"
               >
                 <a
                   href={ticket.event.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2"
+                  className="flex items-center justify-center gap-2"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  Join WhatsApp
+                  <span className="text-xs sm:text-sm">Join WhatsApp</span>
                 </a>
               </Button>
             )}
