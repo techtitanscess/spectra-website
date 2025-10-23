@@ -161,7 +161,7 @@ function PrizePoolSection() {
                 <span className="text-primary">Prize Pool</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pl-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-6">
                 <div className="text-center">
                   <div className="text-yellow-400 font-bold text-lg">1st Place</div>
                   <div className="text-primary text-2xl font-bold">₹20,000</div>
