@@ -161,18 +161,22 @@ function PrizePoolSection() {
                 <span className="text-primary">Prize Pool</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pl-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pl-6">
                 <div className="text-center">
                   <div className="text-yellow-400 font-bold text-lg">1st Place</div>
-                  <div className="text-primary text-2xl font-bold">₹50,000</div>
+                  <div className="text-primary text-2xl font-bold">₹20,000</div>
                 </div>
                 <div className="text-center">
                   <div className="text-gray-400 font-bold text-lg">2nd Place</div>
-                  <div className="text-primary text-2xl font-bold">₹30,000</div>
+                  <div className="text-primary text-2xl font-bold">₹15,000</div>
                 </div>
                 <div className="text-center">
                   <div className="text-orange-400 font-bold text-lg">3rd Place</div>
-                  <div className="text-primary text-2xl font-bold">₹20,000</div>
+                  <div className="text-primary text-2xl font-bold">₹10,000</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-purple-400 font-bold text-lg">Fresher's Track</div>
+                  <div className="text-primary text-2xl font-bold">₹5,000</div>
                 </div>
               </div>
             </div>

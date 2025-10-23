@@ -80,12 +80,12 @@ export default function TicketForm({
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full name</FormLabel>
+              <FormLabel>Full name of Payee (as on card/upi)</FormLabel>
               <FormControl>
                 <Input placeholder="" type="text" {...field} />
               </FormControl>
               <FormDescription>
-                Name of person paying for the ticket.
+                PLEASE ENTER THE NAME OF THE PERSON THE PAYMENT WILL BE MADE UNDER (ACCOUNT NAME)
               </FormDescription>
               <FormMessage />
             </FormItem>
