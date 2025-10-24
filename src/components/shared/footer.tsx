@@ -7,7 +7,7 @@ import { TextShimmerWave } from "../ui/text-shimmer-wave";
 
 export default function Footer() {
   return (
-    <footer className="border-t flex flex-col items-center justify-center w-full p-6 gap-6">
+    <footer className="border-t flex flex-col items-center justify-center w-full p-6 gap-6 mt-6">
       <span
         className={cn(
           codeFont.className,
