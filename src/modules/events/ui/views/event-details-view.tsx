@@ -122,11 +122,11 @@ export default function EventDetailsView() {
           subtitle={`on ${formatDate(event.startDate)}`}
         />
         {event.imageUrl && (
-          <div className="aspect-video  overflow-hidden rounded-lg">
+          <div className="rounded-lg">
             <img
               src={event.imageUrl}
               alt={event.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
             />
           </div>
         )}

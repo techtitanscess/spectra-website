@@ -78,7 +78,7 @@ export default function HackerwrathSection() {
                                 alt="Hackerwrath 2025 Tech"
                                 width={500}
                                 height={500}
-                                className="relative z-10 w-full max-w-lg h-auto object-contain drop-shadow-2xl"
+                                className="relative invert opacity-25 z-10 w-full max-w-lg h-auto object-contain drop-shadow-2xl"
                                 priority
                             />
 
