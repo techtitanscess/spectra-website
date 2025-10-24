@@ -84,7 +84,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ link, text, image }) => {
   const repeatedMarqueeContent = React.useMemo(() => {
     return Array.from({ length: 8 }).map((_, idx) => (
       <React.Fragment key={idx}>
-        <span className="p-[1vh_1vw_0] text-[3vh] leading-[1.2] font-normal text-[#060010] uppercase">
+        <span className="p-[1vh_1vw_0] text-[2vh] leading-[1.2] font-normal text-[#060010] uppercase">
           {text}
         </span>
         <div
