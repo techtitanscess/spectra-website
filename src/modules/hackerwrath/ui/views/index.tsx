@@ -114,15 +114,30 @@ function HeroSection() {
 
         <motion.div
           variants={itemVariants}
-          className="flex items-center gap-3 rounded-full border border-primary/40 bg-white/90 px-6 py-3 mt-4 backdrop-blur"
+          className="flex items-center justify-center gap-3 rounded-full border border-primary/40 bg-white px-6 mt-4 backdrop-blur"
         >
-          <span className="text-sm uppercase tracking-[0.35em] text-primary">Co-powered by</span>
+          <span className="text-md uppercase tracking-[0.35em] text-black">Co-powered by</span>
           <Image
             src="/assets/sponsors/statusbrew-logo.png"
             alt="Statusbrew logo"
+            width={120}
+            height={32}
+            className="h-15 w-auto object-contain"
+            priority
+          />
+        </motion.div>
+
+        <motion.div
+          variants={itemVariants}
+          className="flex items-center gap-3 rounded-full border border-primary/40 bg-white px-6 mt-4 backdrop-blur"
+        >
+          <span className="text-sm uppercase tracking-[0.35em] text-black">Community Partner</span>
+          <Image
+            src="/assets/sponsors/node.png"
+            alt="Node logo"
             width={140}
-            height={100}
-            className="h-9 w-auto"
+            height={200}
+            className="h-14 w-auto"
             priority
           />
         </motion.div>
@@ -181,7 +196,8 @@ function PrizePoolSection() {
                 <div className="text-primary font-semibold">₹300 per person</div>
                 <p>
                   Please register your team on the website and fill in the <a className="underline" href="https://forms.gle/RRLvPnCVuA68KFR6A" target="_blank">Ideathon Google Form</a> as well to
-                  be considered for the hackathon.
+                  be considered for the hackathon. <br />
+                  Join this Whatsapp group for any further updates: <a className="underline" href="https://chat.whatsapp.com/Dddlx1FutIwHePDeF4DKMg?mode=ems_wa_t" target="_blank">https://chat.whatsapp.com/K6uD3gRk6h3Z8mYI2</a>
                 </p>
                 <p>
                   Once you have added all members and if your team has been shortlisted via the Ideathon round, our team will <br />contact you to
