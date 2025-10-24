@@ -15,8 +15,8 @@ export default function LandingView() {
       
       <ShopSection />
       
-      <div className="py-20">
-        <SponsorsSection />
+      <div className="py-40">
+
       </div>
     </div>
   );
