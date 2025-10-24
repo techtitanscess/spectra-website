@@ -244,7 +244,7 @@ function PrizePoolSection() {
                 <span className="text-primary">Prize Pool</span>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pl-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pl-6">
                 <div className="text-center">
                   <div className="text-yellow-400 font-bold text-lg">
                     1st Place
@@ -398,7 +398,7 @@ function PoweredBySection() {
                 <h1
                   className={cn(
                     codeFont.className,
-                    "text-xl md:text-3xl font-semibold"
+                    "text-xl md:text-3xl font-semibold underline"
                   )}
                 >
                   Statusbrew
@@ -439,11 +439,11 @@ function PoweredBySection() {
               />
             </div>
             <div className="flex flex-col items-center md:items-start gap-3">
-              <Link href="https://statusbrew.com" target="_blank">
+              <Link href="https://www.instagram.com/node.hesh/" target="_blank">
                 <h1
                   className={cn(
                     codeFont.className,
-                    "text-xl md:text-3xl font-semibold"
+                    "text-xl md:text-3xl font-semibold underline"
                   )}
                 >
                   Node by Hesh Media
