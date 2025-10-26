@@ -149,7 +149,9 @@ export default function EventDetailsView() {
                   <span className="font-semibold text-lg">Event Duration</span>
                 </div>
                 <span className="text-muted-foreground font-medium">
-                  {event.totalHours} hours
+                  {event.totalHours > 24
+                    ? `${Math.floor(event.totalHours / 24)} day${Math.floor(event.totalHours / 24) !== 1 ? "s" : ""}`
+                    : `${event.totalHours} hour${event.totalHours !== 1 ? "s" : ""}`}
                 </span>
               </div>
 

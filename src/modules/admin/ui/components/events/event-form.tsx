@@ -34,19 +34,26 @@ const formSchema = z
     endDate: z.date(),
     description: z.string(),
     imageUrl: z.string().url().optional().or(z.literal("")),
-    whatsappUrl: z.string()
+    whatsappUrl: z
+      .string()
       .optional()
-      .refine((val) => {
-        if (!val || val === "") return true;
-        try {
-          const url = new URL(val);
-          return url.hostname === "chat.whatsapp.com" || url.hostname === "wa.me";
-        } catch {
-          return false;
+      .refine(
+        (val) => {
+          if (!val || val === "") return true;
+          try {
+            const url = new URL(val);
+            return (
+              url.hostname === "chat.whatsapp.com" || url.hostname === "wa.me"
+            );
+          } catch {
+            return false;
+          }
+        },
+        {
+          message:
+            "Please enter a valid WhatsApp group link (chat.whatsapp.com or wa.me)",
         }
-      }, {
-        message: "Please enter a valid WhatsApp group link (chat.whatsapp.com or wa.me)",
-      }),
+      ),
     totalHours: z.number().min(1),
     ticketCost: z.number().min(0),
   })
@@ -64,14 +71,14 @@ export default function EventForm({ event, onSuccess }: EventFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      startDate: new Date(),
-      endDate: new Date(),
-      description: "",
-      imageUrl: "",
-      whatsappUrl: "",
-      totalHours: 1,
-      ticketCost: 0,
+      name: event?.name || "",
+      startDate: event ? new Date(event.startDate) : new Date(),
+      endDate: event ? new Date(event.endDate) : new Date(),
+      description: event?.description || "",
+      imageUrl: event?.imageUrl || "",
+      whatsappUrl: event?.whatsappUrl || "",
+      totalHours: event?.totalHours || 1,
+      ticketCost: event?.ticketCost || 0,
     },
   });
 
