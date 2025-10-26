@@ -717,31 +717,31 @@ function PoweredBySection() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex w-full items-center justify-center">
               <Image
-                src="/assets/sponsors/devnote.png"
-                alt="DevNote"
+                src="/assets/sponsors/devnovate.jpg"
+                alt="Devnovate"
                 className="invert self-center"
                 width={200}
                 height={100}
               />
             </div>
             <div className="flex flex-col items-center md:items-start gap-3">
-              <Link href="https://devnote.in" target="_blank">
+              <Link href="https://devnovate.co/" target="_blank">
                 <h1
                   className={cn(
                     codeFont.className,
                     "text-xl md:text-3xl font-semibold underline"
                   )}
                 >
-                  DevNote
+                  Devnovate
                 </h1>
               </Link>
               <p className="text-muted-foreground text-justify">
-                DevNote is a comprehensive platform for developers to discover,
-                list, and participate in tech events, hackathons, and coding
-                competitions. It serves as a central hub for the developer
-                community, helping organizers reach their target audience and
-                enabling developers to find opportunities that match their
-                interests and skill levels.
+                Devnovate is the ultimate platform for developers and innovators
+                to discover, join, and organize hackathons and tech events.
+                Whether you're looking to showcase your skills, collaborate with
+                like-minded creators, or launch your own event, Devnovate
+                connects you to a vibrant global community driving the future of
+                technology and innovation.
               </p>
             </div>
           </div>
