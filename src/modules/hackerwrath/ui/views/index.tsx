@@ -933,6 +933,15 @@ function TimelineSection() {
             the briefing session.
           </p>
           <ul className="space-y-3 text-sm md:text-base">
+             <li>
+              <span className="font-semibold text-primary">
+                6:00 AM
+              </span>{" "}
+              Theme Announcement
+              <p className="text-neutral-600 dark:text-neutral-300 text-xs">
+                Themes will be revealed - You can start ideating!
+              </p>
+            </li>
             <li>
               <span className="font-semibold text-primary">
                 8:30 AM Onwards:
@@ -966,10 +975,6 @@ function TimelineSection() {
             meals, and fun.
           </p>
           <ul className="space-y-3 text-sm md:text-base">
-            <li>
-              <span className="font-semibold text-primary">6:00 AM:</span>{" "}
-              Themes get Announced - Start Ideating 🚀
-            </li>
             <li>
               <span className="font-semibold text-primary">
                 10:00 AM – 2:00 PM:
