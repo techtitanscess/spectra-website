@@ -262,7 +262,7 @@ function HeroSection() {
                   <li className="flex gap-3">
                     <span className="text-primary font-bold min-w-[2rem]">4.</span>
                     <span className="text-muted-foreground">
-                      Mandatorily participate in the{" "}
+                      Mandatorily participate in the{" "} 
                       <Link 
                         href="https://forms.gle/RRLvPnCVuA68KFR6A" 
                         target="_blank"
@@ -271,6 +271,7 @@ function HeroSection() {
                       >
                         Ideathon
                       </Link>
+                       ‎ as well after creating/joining a team to be considered for Hackerwrath 2.0
                     </span>
                   </li>
 
