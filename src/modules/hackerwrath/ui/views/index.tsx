@@ -224,7 +224,7 @@ function PrizePoolSection() {
                   our team will contact you to confirm your registration. Please
                   be patient. <br /> <br />
                   <span className="text-yellow-400">
-                    ⚠ REGISTRATIONS CLOSE on 27th October (Monday) at 11:59 PM.
+                    ⚠ REGISTRATIONS CLOSE on 31st October (Monday) at 11:59 AM (Noon).
                   </span>{" "}
                   <br />
                   <br />
