@@ -193,7 +193,7 @@ function PrizePoolSection() {
 
               <div className="pl-5 space-y-2 text-gray-400">
                 <div className="text-primary font-semibold">
-                  ₹300 per person
+                  ₹150 per person
                 </div>
 
                 <p>
