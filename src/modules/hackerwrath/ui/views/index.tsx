@@ -665,7 +665,7 @@ function PoweredBySection() {
               "text-primary text-xl md:text-3xl font-semibold tracking-tight italic"
             )}
           >
-            Community Partner
+            Community Partners
           </span>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -700,6 +700,38 @@ function PoweredBySection() {
                 audience to explore new tech frontiers, connect with like-minded
                 individuals, and level up their skills in a collaborative &
                 accessible way.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex w-full items-center justify-center">
+              <Image
+                src="/assets/sponsors/gsc.png"
+                alt="Node"
+                className="invert self-center"
+                width={200}
+                height={100}
+              />
+            </div>
+          <div className="flex flex-col items-center md:items-start gap-3">
+              <Link href="https://chat.whatsapp.com/LoOA9n12ohW1P8jaeqTTOx?mode=wwt" target="_blank">
+                <h1
+                  className={cn(
+                    codeFont.className,
+                    "text-xl md:text-3xl font-semibold underline"
+                  )}
+                >
+                  GNDU Students' Community
+                </h1>
+              </Link>
+              <p className="text-muted-foreground text-justify">
+                Aspire. Inspire. Unite.
+                Connecting Students. Creating Change.
+                A student-driven initiative uniting GNDU under one collaborative platform. 
+                Rooted in Vasudhaiva Kutumbhakam, we connect learners, share opportunities, 
+                and amplify student voices — building a culture of growth, awareness, and 
+                collective progress across the campus.
               </p>
             </div>
           </div>
@@ -747,7 +779,6 @@ function PoweredBySection() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 
@@ -950,7 +981,11 @@ function TimelineSection() {
               </p>
             </li>
           </ul>
+          <p className="mt-6 text-xs md:text-sm text-neutral-800 dark:text-neutral-200">
+            Note: Schedule is subject to change by organizers without prior notice.
+          </p>
         </div>
+        
       ),
     },
   ];
