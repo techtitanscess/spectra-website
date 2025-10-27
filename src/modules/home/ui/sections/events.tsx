@@ -35,7 +35,7 @@ export default async function EventsSection() {
           duration={20}
           className="text-primary flex items-center"
         >
-          {`~ Displaying 4 of 27 events:`}
+          {`~ Displaying 4 of 26 events:`}
         </TypingAnimation>
         <AnimatedSpan className="my-1 h-[600px]">
           <EventsMenu items={events} />
