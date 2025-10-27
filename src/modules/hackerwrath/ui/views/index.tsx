@@ -967,6 +967,10 @@ function TimelineSection() {
           </p>
           <ul className="space-y-3 text-sm md:text-base">
             <li>
+              <span className="font-semibold text-primary">6:00 AM:</span>{" "}
+              Themes get Announced - Start Ideating 🚀
+            </li>
+            <li>
               <span className="font-semibold text-primary">
                 10:00 AM – 2:00 PM:
               </span>{" "}
