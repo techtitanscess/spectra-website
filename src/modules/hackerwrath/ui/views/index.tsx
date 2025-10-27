@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, type Variants } from "motion/react";
 import TeamDialog from "../components/team-dialog";
+import { authClient } from "@/lib/auth-client";
 import {
   Terminal,
   TypingAnimation,
@@ -26,8 +27,13 @@ import {
   Shield,
   AlertTriangle,
   CheckCircle,
+  PlayCircle,
 } from "lucide-react";
 import Header from "@/components/shared/header";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 import {
   Marquee,
   MarqueeContent,
@@ -49,6 +55,10 @@ function SafeTerminalBg(props: any) {
 }
 
 function HeroSection() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = React.useState(false);
+  const [showTeamDialog, setShowTeamDialog] = React.useState(false);
+  const { data: session } = authClient.useSession();
+
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -116,6 +126,16 @@ function HeroSection() {
           challenge?
         </motion.p>
 
+        <motion.div variants={itemVariants}>
+          <button
+            onClick={() => setIsVideoModalOpen(true)}
+            className="text-primary hover:text-primary/80 underline underline-offset-4 text-sm sm:text-base md:text-lg flex items-center gap-2 transition-colors"
+          >
+            <PlayCircle className="h-4 w-4 sm:h-5 sm:w-5" />
+            How to Register?
+          </button>
+        </motion.div>
+
         <motion.div
           variants={buttonGroupVariants}
           className="flex flex-col sm:flex-row gap-4"
@@ -162,6 +182,125 @@ function HeroSection() {
           brightness={0.4}
         />
       </div>
+
+      {/* Video Modal */}
+      <Dialog open={isVideoModalOpen} onOpenChange={setIsVideoModalOpen}>
+        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto">
+          <div className="space-y-6">
+            {/* Video Section */}
+            <div className="relative w-full aspect-video">
+              <video
+                className="w-full h-full rounded-lg"
+                controls
+                autoPlay
+                src="/assets/video.mp4"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+
+            {/* Step-by-Step Instructions */}
+            <div className="space-y-4 px-2">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
+                <p className="text-yellow-400 font-semibold text-sm md:text-base">
+                  <span className="text-yellow-300">NOTE:</span> Ideathon is free, you only pay if you are selected
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className={cn(codeFont.className, "text-primary text-lg md:text-xl font-semibold")}>
+                  Registration Steps:
+                </h3>
+
+                <ol className="space-y-4 text-sm md:text-base">
+                  {/* Step 1 */}
+                  <li className="flex gap-3">
+                    <span className="text-primary font-bold min-w-[2rem]">1.</span>
+                    <span className="text-muted-foreground">
+                      {session ? (
+                        <>You're already signed in! ✓</>
+                      ) : (
+                        <>
+                          <Link 
+                            href="/sign-up" 
+                            className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+                            onClick={() => setIsVideoModalOpen(false)}
+                          >
+                            Sign up
+                          </Link>
+                          {" "}on the website
+                        </>
+                      )}
+                    </span>
+                  </li>
+
+                  {/* Step 2 */}
+                  <li className="flex gap-3">
+                    <span className="text-primary font-bold min-w-[2rem]">2.</span>
+                    <span className="text-muted-foreground">
+                      Click on the "Create Team" button and add your team members (type their email in the search column, wait for 1-2 seconds for their name to appear and click on the name)
+                    </span>
+                  </li>
+
+                  {/* Step 3 */}
+                  <li className="flex gap-3">
+                    <span className="text-primary font-bold min-w-[2rem]">3.</span>
+                    <span className="text-muted-foreground">
+                      If you're invited to a team, go to your{" "}
+                      <Link 
+                        href="/profile" 
+                        className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+                        onClick={() => setIsVideoModalOpen(false)}
+                      >
+                        profile
+                      </Link>
+                      {" "}and check your requests in the <span className="text-primary font-semibold">My Teams</span> section. Any invites will show up there
+                    </span>
+                  </li>
+
+                  {/* Step 4 */}
+                  <li className="flex gap-3">
+                    <span className="text-primary font-bold min-w-[2rem]">4.</span>
+                    <span className="text-muted-foreground">
+                      Mandatorily participate in the{" "}
+                      <Link 
+                        href="https://forms.gle/RRLvPnCVuA68KFR6A" 
+                        target="_blank"
+                        className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+                        onClick={() => setIsVideoModalOpen(false)}
+                      >
+                        Ideathon
+                      </Link>
+                    </span>
+                  </li>
+
+                  {/* Step 5 */}
+                  <li className="flex gap-3">
+                    <span className="text-primary font-bold min-w-[2rem]">5.</span>
+                    <span className="text-muted-foreground">
+                      If your team is approved, we'll call you to make the payment. Then go to{" "}
+                      <Link 
+                        href="/profile" 
+                        className="text-cyan-400 hover:text-cyan-300 underline underline-offset-4"
+                        onClick={() => setIsVideoModalOpen(false)}
+                      >
+                        /profile
+                      </Link>
+                      {" "}under <span className="text-primary font-semibold">My Teams</span> section and you will see{" "}
+                      <span className="text-green-400 font-semibold">"Approved"</span> next to your team's name
+                    </span>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Team Dialog triggered from modal */}
+      {showTeamDialog && (
+        <TeamDialog />
+      )}
     </section>
   );
 }
