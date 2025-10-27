@@ -492,7 +492,7 @@ function RulesSection() {
                   <li>Teams must consist of 2-4 members maximum</li>
                   <li>All team members must be registered students</li>
                   <li>Cross-college teams are allowed and encouraged</li>
-                  <li>Registration fee of ₹300 per person is mandatory</li>
+                  <li>Registration fee of ₹150 per person is mandatory</li>
                   <li>
                     Teams must complete both website registration and Ideathon
                     form
