@@ -430,14 +430,96 @@ function PrizePoolSection() {
                   Themes & Problem Statements
                 </span>
               </div>
-              <div className="pl-8 space-y-2">
-                <div className="flex items-center gap-2 text-yellow-400">
-                  <Clock className="h-4 w-4" />
-                  <span className="font-semibold">Loading themes...</span>
+              <div className="pl-8 space-y-6 text-gray-400">
+                {/* Theme 1 */}
+                <div className="space-y-2">
+                  <h4 className="text-primary font-semibold text-base">
+                    1. Reimagine the Mundane
+                  </h4>
+                  <p className="text-sm">
+                    <span className="text-cyan-400 font-medium">The Challenge:</span>{" "}
+                    Take a daily object, boring task, or common routine and reinvent it. 
+                    Find the magic hiding in the everyday things we all take for granted.
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-green-400 font-medium">Why This Matters:</span>{" "}
+                    Everyone has mundane routines—this is your chance to make them extraordinary. 
+                    Innovation doesn't always need to be cutting-edge; sometimes it's about 
+                    reimagining what's already in front of us.
+                  </p>
                 </div>
-                <div className="text-muted-foreground text-sm">
-                  Exciting themes and problem statements will be available soon
-                  !
+
+                {/* Theme 2 */}
+                <div className="space-y-2">
+                  <h4 className="text-primary font-semibold text-base">
+                    2. Art, Code, & Chaos
+                  </h4>
+                  <p className="text-sm">
+                    <span className="text-cyan-400 font-medium">The Challenge:</span>{" "}
+                    Create something that is useless but beautiful, or useful because it's beautiful. 
+                    Build at the intersection of technology and human expression—where function meets feeling.
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-green-400 font-medium">Why This Matters:</span>{" "}
+                    Not every project needs a business model. This track celebrates pure creativity 
+                    and experimentation, giving designers, artists, and coders permission to play 
+                    without constraints.
+                  </p>
+                </div>
+
+                {/* Theme 3 */}
+                <div className="space-y-2">
+                  <h4 className="text-primary font-semibold text-base">
+                    3. Retro-Future
+                  </h4>
+                  <p className="text-sm">
+                    <span className="text-cyan-400 font-medium">The Challenge:</span>{" "}
+                    What if a past era had today's technology? Or what if today's tech wore a retro 
+                    aesthetic? Explore the collision of nostalgia and imagined futures.
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-green-400 font-medium">Why This Matters:</span>{" "}
+                    It's a stylistic playground with clear creative direction but total technical freedom. 
+                    Build something that feels like yesterday and tomorrow at the same time.
+                  </p>
+                </div>
+
+                {/* Theme 4 */}
+                <div className="space-y-2">
+                  <h4 className="text-primary font-semibold text-base">
+                    4. Hack the System
+                  </h4>
+                  <p className="text-sm">
+                    <span className="text-cyan-400 font-medium">The Challenge:</span>{" "}
+                    Find a system that's broken, inefficient, or unfair—then build a tool to fix it. 
+                    Target bureaucratic, social, or digital systems that need disruption.
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-green-400 font-medium">Why This Matters:</span>{" "}
+                    This channels the classic hacker ethos of challenging the status quo. These projects 
+                    have the potential for real-world impact, empowering people to navigate systems 
+                    designed to exclude them.
+                  </p>
+                </div>
+
+                {/* Theme 5 */}
+                <div className="space-y-2">
+                  <h4 className="text-primary font-semibold text-base">
+                    5. Tech for the Margins
+                  </h4>
+                  <p className="text-sm">
+                    <span className="text-cyan-400 font-medium">The Challenge:</span>{" "}
+                    Build technology that bridges the gap between capability and opportunity for 
+                    underserved communities. Create tools that address real barriers in accessibility, 
+                    communication, mobility, or daily independence. Design for agency, not charity.
+                  </p>
+                  <p className="text-sm">
+                    <span className="text-green-400 font-medium">Why This Matters:</span>{" "}
+                    Accessibility isn't niche—1 in 6 people worldwide has a significant disability, 
+                    and 96.8% of top websites fail accessibility standards. By building for the margins, 
+                    you create solutions with universal impact. This is about removing systemic barriers 
+                    and designing for the full spectrum of human experience.
+                  </p>
                 </div>
               </div>
             </div>
@@ -446,11 +528,37 @@ function PrizePoolSection() {
             <div className="space-y-4 pt-4 border-t border-primary/30">
               <div className="flex items-center gap-2">
                 <Gamepad2 className="h-6 w-6 text-purple-400" />
-                <span className="text-primary ">Fun Activities</span>
+                <span className="text-primary">Fun Activities</span>
               </div>
-              <div className="pl-8 text-muted-foreground">
-                Lots of fun activites to keep you energized throughout the
-                hackathon! Details coming soon.
+              <div className="pl-8 space-y-3 text-muted-foreground">
+                <p>
+                  Join the lighter side of Hackerwrath — we've lined up a mix of
+                  short, high-energy events to keep you sharp and entertained
+                  between builds.
+                </p>
+
+                <ul className="list-disc list-inside space-y-2">
+                  <li>
+                    <strong>Mini games</strong>
+                  </li>
+                  <li>
+                    <strong>Puzzles & brainteasers</strong>
+                  </li>
+                  <li>
+                    <strong>CTF (Capture The Flag)</strong> — a beginner-friendly
+                    CTF for you to try to crack while the code cracks you.
+                  </li>
+                  <li>
+                    <strong>Surprise pop-ups</strong> — lightning talks, micro
+                    workshops, and other spontaneous events across the event.
+                  </li>
+                </ul>
+
+                <p className="text-sm text-muted-foreground">
+                  Prizes, timings and rules will be announced on-stage and in
+                  the schedule. Keep an eye on the timeline and event board for
+                  exact start times — and bring your A-game!
+                </p>
               </div>
             </div>
           </AnimatedSpan>
@@ -616,6 +724,25 @@ function RulesSection() {
                   <li>Missing submission deadline</li>
                   <li>Incomplete team registration or payment</li>
                   <li>Providing false information during registration</li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Submission Rules */}
+            <div className="space-y-4 pt-4 border-t border-green-500/30">
+              <div className="flex items-center gap-2">
+                <FileText className="h-6 w-6 text-green-400" />
+                <span className="text-primary">Prizes Eligibility</span>
+              </div>
+              <div className="pl-8 space-y-2 text-gray-400">
+                <ul className="list-disc list-inside space-y-2">
+                  <li>Teams must have a working prototype to qualify for awards. </li>
+                  <li>Prizes will be awarded as Amazon Gift Cards to ensure a simple and secure immediate distribution of the awards.</li> 
+                  <li>Utilization and distribution of this prize among the winning team's members are at their own discretion.</li>
+                  <li>Only teams with functional and demonstrable prototypes will be considered for winning prizes.</li>
+                  <li>All teams must submit a video recording showcasing their working prototype</li>
+                  <li>Video can be recorded on phones, screen recordings, or any other method </li>
+                  <li>Video should accurately depict your project and demonstrate key functionality</li>
                 </ul>
               </div>
             </div>
